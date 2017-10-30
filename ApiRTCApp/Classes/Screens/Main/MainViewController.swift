@@ -30,6 +30,6 @@ class MainViewController: UIViewController {
     
     @objc func tapButton(_ button: UIButton) {
         
-        ApiRTC.test()
+        //ApiRTC.test()
     }
 }

@@ -31,3 +31,6 @@ xcuserdata/
 *.xcscmblueprint
 *.ipa
 *.app.dSYM.zip
+
+#
+commit.sh

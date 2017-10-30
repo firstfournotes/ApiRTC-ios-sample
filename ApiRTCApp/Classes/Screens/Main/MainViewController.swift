@@ -24,12 +24,12 @@ class MainViewController: UIViewController {
             make.height.equalTo(30)
             make.center.equalTo(self.view.snp.center)
         }
-        
+
         button.addTarget(self, action: #selector(tapButton(_:)), for: .touchUpInside)
     }
     
     @objc func tapButton(_ button: UIButton) {
         
-        //ApiRTC.test()
+        ApiRTC.test2()
     }
 }

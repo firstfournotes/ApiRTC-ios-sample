@@ -14,10 +14,14 @@ class MainViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        ApiRTC.initialize(apiKey: Config.apiKey)
+        ApiRTC.settings.logTypes = [.error, .info, .warning]
+        ApiRTC.set(delegate: self)
         
         let button = UIButton()
         button.backgroundColor = .red
-        button.setTitle("Test", for: .normal)
+        button.setTitle("test".loc(), for: .normal)
         self.view.addSubview(button)
         button.snp.makeConstraints { (make) in
             make.width.equalTo(100)
@@ -29,7 +33,22 @@ class MainViewController: UIViewController {
     }
     
     @objc func tapButton(_ button: UIButton) {
+
+        ApiRTC.connect()
+    }
+}
+
+extension MainViewController: ApiRTCDelegate {
+    
+    func apiRTCConnected(_ apiRTC: ApiRTC) {
         
-        ApiRTC.test2()
+    }
+    
+    func apiRTCDisconnected(_ apiRTC: ApiRTC) {
+        
+    }
+    
+    func apiRTCConnection(_ apiRTC: ApiRTC, failWithError error: Error) {
+        //print(error)
     }
 }

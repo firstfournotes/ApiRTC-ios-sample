@@ -6,7 +6,13 @@
 //  Copyright © 2017 Apizee. All rights reserved.
 //
 
+import UIKit
+
 struct Config {
 
     static let apiKey = "myDemoApiKey_IOS_SDK"
+    
+    struct UI {
+        static let screenSize = UIScreen.main.bounds.size
+    }
 }

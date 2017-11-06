@@ -7,3 +7,5 @@
 */
 
 "call" = "Call";
+"answer" = "Answer";
+"hangUp" = "HangUp";

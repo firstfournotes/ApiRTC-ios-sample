@@ -15,4 +15,11 @@ struct Config {
     struct UI {
         static let screenSize = UIScreen.main.bounds.size
     }
+    
+    struct Color {
+        static let darkGray = UIColor.hex("354B5D")
+        static let lightGray = UIColor.hex("47637a")
+        static let green = UIColor.hex("80dd58")
+        static let red = UIColor.hex("CC3637")
+    }
 }

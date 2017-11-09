@@ -16,27 +16,23 @@ enum State {
     case initializing
     case connecting
     case ready
-    case videoCallDialing
-    case audioCallDialing
+    case incomingCall
+    case videoCallConnecting
+    case audioCallConnecting
     case videoCall
     case audioCall
-    case hangingUp
+    case hangedUp
     case disconnected
-    case error(Error?)
+    case error
 }
 
 class MainViewController: UIViewController, UITextFieldDelegate {
     
-    var numberField: UITextField!
+    var controlView: ControlView!
+    var usernameField: UsernameField!
     var userIdLabel: UILabel!
     var stateLabel: UILabel!
-
-    var videoCallButton: UIButton!
-    var audioCallButton: UIButton!
-    var answerButton: UIButton!
-    var hangupButton: UIButton!
     
-    static let buttonSize: Double = 50
     var keyboardRect: CGRect = .zero
     
     var state: State! {
@@ -46,6 +42,8 @@ class MainViewController: UIViewController, UITextFieldDelegate {
     }
     
     var localVideoView, remoteVideoView: UIView!
+    
+    var currentSession: RTCSession?
     
     deinit {
         removeKeyboardNotificationsObservers()
@@ -66,62 +64,27 @@ class MainViewController: UIViewController, UITextFieldDelegate {
         localVideoView.backgroundColor = UIColor.white.withAlphaComponent(0.3)
         self.view.addSubview(localVideoView)
         
-        // Buttons
-        videoCallButton = Button(image: UIImage.fontAwesomeIcon(name: .videoCamera, textColor: .white, size: CGSize(width: 30, height: 30)), bgColor: Config.Color.green)
-        self.view.addSubview(videoCallButton)
-        videoCallButton.snp.makeConstraints { (make) in
-            make.width.equalTo(type(of: self).buttonSize)
-            make.height.equalTo(type(of: self).buttonSize)
-            make.bottom.equalTo(0)
-            make.left.equalTo(0)
+        controlView = ControlView()
+        self.view.addSubview(controlView)
+        controlView.snp.makeConstraints { (make) in
+            make.left.right.bottom.equalTo(0)
+            make.height.equalTo(ControlView.height)
         }
-        videoCallButton.addTarget(self, action: #selector(tapVideoCallButton(_:)), for: .touchUpInside)
-        
-        audioCallButton = Button(image: UIImage.fontAwesomeIcon(name: .phoneSquare, textColor: .white, size: CGSize(width: 30, height: 30)), bgColor: Config.Color.green)
-        self.view.addSubview(audioCallButton)
-        audioCallButton.snp.makeConstraints { (make) in
-            make.width.equalTo(type(of: self).buttonSize)
-            make.height.equalTo(type(of: self).buttonSize)
-            make.bottom.equalTo(0)
-            make.left.equalTo(videoCallButton.snp.right).offset(1)
-        }
-        audioCallButton.addTarget(self, action: #selector(tapAudioCallButton(_:)), for: .touchUpInside)
-
-        answerButton = Button(image: UIImage.fontAwesomeIcon(name: .phone, textColor: .white, size: CGSize(width: 30, height: 30)), bgColor: Config.Color.green)
-        self.view.addSubview(answerButton)
-        answerButton.snp.makeConstraints { (make) in
-            make.width.equalTo(type(of: self).buttonSize)
-            make.height.equalTo(type(of: self).buttonSize)
-            make.bottom.equalTo(0)
-            make.left.equalTo(audioCallButton.snp.right).offset(1)
-        }
-        answerButton.addTarget(self, action: #selector(tapAnswerButton(_:)), for: .touchUpInside)
-
-        hangupButton = Button(image: UIImage(named: "hangup")!.withRenderingMode(UIImageRenderingMode.alwaysTemplate), bgColor: Config.Color.red)
-        hangupButton.tintColor = .white
-        self.view.addSubview(hangupButton)
-        hangupButton.snp.makeConstraints { (make) in
-            make.height.equalTo(type(of: self).buttonSize)
-            make.bottom.equalTo(0)
-            make.left.equalTo(answerButton.snp.right).offset(1)
-            make.right.equalTo(0)
-        }
-        hangupButton.addTarget(self, action: #selector(tapHangUpButton(_:)), for: .touchUpInside)
+        controlView.videoCallButton.addTarget(self, action: #selector(tapVideoCallButton(_:)), for: .touchUpInside)
+        controlView.audioCallButton.addTarget(self, action: #selector(tapAudioCallButton(_:)), for: .touchUpInside)
+        controlView.answerButton.addTarget(self, action: #selector(tapAnswerButton(_:)), for: .touchUpInside)
+        controlView.hangupButton.addTarget(self, action: #selector(tapHangUpButton(_:)), for: .touchUpInside)
         
         // Number
-        numberField = UITextField()
-        numberField.text = "106273"
-        numberField.textColor = .white
-        numberField.backgroundColor = UIColor.white.withAlphaComponent(0.1)
-        numberField.placeholder = "Type number".loc()
-        numberField.textAlignment = .center
-        self.view.addSubview(numberField)
-        numberField.snp.makeConstraints { (make) in
+        usernameField = UsernameField()
+        //usernameField.text = ""
+        usernameField.delegate = self
+        self.view.addSubview(usernameField)
+        usernameField.snp.makeConstraints { (make) in
             make.left.right.equalTo(0)
-            make.bottom.equalTo(-(type(of: self).buttonSize + 1))
+            make.bottom.equalTo(-(ControlView.height + 1))
             make.height.equalTo(30)
         }
-        numberField.delegate = self
 
         // Misc
         userIdLabel = UILabel()
@@ -130,7 +93,7 @@ class MainViewController: UIViewController, UITextFieldDelegate {
         self.view.addSubview(userIdLabel)
         userIdLabel.snp.makeConstraints { (make) in
             make.height.equalTo(20)
-            make.width.equalTo(Config.UI.screenSize.width / 2.0)
+            make.width.equalTo(Config.UI.screenSize.width / 2)
             make.top.equalTo(0)
             make.left.equalTo(5)
         }
@@ -142,10 +105,14 @@ class MainViewController: UIViewController, UITextFieldDelegate {
         self.view.addSubview(stateLabel)
         stateLabel.snp.makeConstraints { (make) in
             make.height.equalTo(20)
-            make.width.equalTo(Config.UI.screenSize.width / 2.0)
+            make.width.equalTo(Config.UI.screenSize.width / 2)
             make.top.equalTo(0)
             make.right.equalTo(-5)
         }
+        
+        let swipeGR = UISwipeGestureRecognizer(target: self, action: #selector(swipeDown(_:)))
+        swipeGR.direction = .down
+        self.view.addGestureRecognizer(swipeGR)
         
         registerForKeyboardNotifications()
         
@@ -166,51 +133,70 @@ class MainViewController: UIViewController, UITextFieldDelegate {
         
         ApiRTC.initialize(apiKey: Config.apiKey)
         ApiRTC.settings.logTypes = [.error, .info, .warning]
-        
-        ApiRTC.onConnected { [weak self] in
-            self?.userIdLabel.text = "Your id".loc() + ": " + ApiRTC.user.id
-            self?.state = .ready
-        }
-        ApiRTC.onConnectionError { [weak self] (error) in
-            self?.state = .error(error)
-        }
-        ApiRTC.onDisconnected { [weak self] in
-            self?.state = .disconnected
+        ApiRTC.onStateChanged { [weak self] (state) in
+            switch state {
+            case .connected:
+                self?.userIdLabel.text = "Your id".loc() + ": " + ApiRTC.user.id
+                self?.state = .ready
+            case .error(let error):
+                self?.state = .error
+                debugPrint("Error:\(error)")
+            case .disconnected:
+                self?.state = .disconnected
+            default:
+                break
+            }
         }
         ApiRTC.connect()
         
         ApiRTC.rtc.initialize()
-        ApiRTC.rtc.onCall { (connection) in
+        ApiRTC.rtc.onNewSession { [weak self] session in
             DispatchQueue.main.async {
-                switch connection.type {
-                case .videoCall:
-                    self.state = .videoCall
-                case .audioCall:
-                    self.state = .audioCall
-                default:
-                    break
+                if self?.state == .ready {
+                    self?.usernameField.text = session.ownerId
+                    self?.currentSession = session
+                    self?.state = .incomingCall
                 }
             }
         }
-        ApiRTC.rtc.onHangup {
-            DispatchQueue.main.async {
-                self.state = .hangingUp
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
-                    self.state = .ready
-                })
+        ApiRTC.rtc.onSessionStateChanged { [weak self] (session, state) in
+            switch session.state {
+            case .onCall:
+                DispatchQueue.main.async {
+                    switch session.type {
+                    case .videoCall:
+                        self?.state = .videoCall
+                    case .audioCall:
+                        self?.state = .audioCall
+                    default:
+                        break
+                    }
+                }
+            case .closed:
+                self?.currentSession = nil
+                DispatchQueue.main.async {
+                    self?.state = .hangedUp
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
+                        self?.state = .ready
+                    })
+                }
+            case .error(let error):
+                DispatchQueue.main.async {
+                    self?.state = .error
+                    debugPrint("Error:\(error)")
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
+                        self?.state = .ready
+                    })
+                }
+            default:
+                break
             }
         }
-        ApiRTC.rtc.onError { (error) in
-            DispatchQueue.main.async {
-                self.state = .error(error)
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
-                    self.state = .ready
-                })
-            }
-        }
-        
+
         ApiRTC.rtc.add(localVideoView: localVideoView, remoteVideoView: remoteVideoView)
     }
+    
+    // MARK: Actions
     
     @objc func tapVideoCallButton(_ button: UIButton) {
         
@@ -218,144 +204,98 @@ class MainViewController: UIViewController, UITextFieldDelegate {
             return
         }
         
-        state = .videoCallDialing
+        state = .videoCallConnecting
         
-        let connection = RTCConnection(type: .videoCall, dst: [number])
-        ApiRTC.rtc.start(connection)
+        currentSession = ApiRTC.rtc.newSession(type: .videoCall, destinationId: number)
+        do {
+            try currentSession!.start()
+        }
+        catch {
+            print("Error: \(error)")
+        }
     }
     
     @objc func tapAudioCallButton(_ button: UIButton) {
         
-        // FIXME:
-//        guard let number = getNumber() else {
-//            return
-//        }
-//
-//        state = .audioCallDialing
-//
-//        let connection = RTCConnection(type: .audioCall, dst: [number])
-//        ApiRTC.rtc.start(connection)
+        guard let number = getNumber() else {
+            return
+        }
+        
+        state = .videoCallConnecting
+        
+        currentSession = ApiRTC.rtc.newSession(type: .audioCall, destinationId: number)
+        do {
+            try currentSession!.start()
+        }
+        catch {
+            print("Error: \(error)")
+        }
     }
     
     func getNumber() -> String? {
-        guard let number = numberField.text, number.count > 0 else {
+        guard let number = usernameField.text, number.count > 0 else {
             showWarningAlert(message: "Type the number")
             return nil
         }
         return number
     }
     
-    
     @objc func tapAnswerButton(_ button: UIButton) {
         
-        ApiRTC.rtc.answer()
+        guard let session = currentSession else {
+            return
+        }
+                
+        switch session.type {
+        case .videoCall:
+            state = .videoCall
+        case .audioCall:
+            state = .audioCall
+        default:
+            break
+        }
+        
+        session.answer()
     }
     
     @objc func tapHangUpButton(_ button: UIButton) {
-        
-        ApiRTC.rtc.hangUp()
+        currentSession?.close()
+    }
+    
+    @objc func swipeDown(_ gr: UISwipeGestureRecognizer) {
+        usernameField.resignFirstResponder()
     }
     
     // MARK:
     
     func handle(_ state: State) {
         
-        // FIXME: simplify it
+        func resetUI() {
+            remoteVideoView.isHidden = true
+            localVideoView.isHidden = true
+        }
         
         func handle() {
             stateLabel.textColor = .lightGray
             
+            resetUI()
+            
             switch state {
-            case .initializing:
-                videoCallButton.isEnabled = false
-                audioCallButton.isEnabled = false
-                answerButton.isEnabled = false
-                hangupButton.isEnabled = false
-                numberField.isHidden = true
-                remoteVideoView.isHidden = true
-                localVideoView.isHidden = true
-            case .connecting:
-                videoCallButton.isEnabled = false
-                audioCallButton.isEnabled = false
-                answerButton.isEnabled = false
-                hangupButton.isEnabled = false
-                numberField.isHidden = true
-                remoteVideoView.isHidden = true
-                localVideoView.isHidden = true
-            case .ready:
-                videoCallButton.isEnabled = true
-                audioCallButton.isEnabled = true
-                answerButton.isEnabled = false
-                hangupButton.isEnabled = false
-                numberField.isHidden = false
-                numberField.isEnabled = true
-                remoteVideoView.isHidden = true
-                localVideoView.isHidden = true
-            case .videoCallDialing:
-                videoCallButton.isEnabled = false
-                audioCallButton.isEnabled = false
-                answerButton.isEnabled = false
-                hangupButton.isEnabled = true
-                numberField.isHidden = false
-                numberField.isEnabled = false
-                remoteVideoView.isHidden = true
+            case .videoCallConnecting:
                 localVideoView.isHidden = false
-            case .audioCallDialing:
-                videoCallButton.isEnabled = false
-                audioCallButton.isEnabled = false
-                answerButton.isEnabled = false
-                hangupButton.isEnabled = true
-                numberField.isHidden = false
-                numberField.isEnabled = false
-                remoteVideoView.isHidden = true
-                localVideoView.isHidden = true
             case .videoCall:
-                videoCallButton.isEnabled = false
-                audioCallButton.isEnabled = false
-                answerButton.isEnabled = false
-                hangupButton.isEnabled = true
-                numberField.isHidden = false
-                numberField.isEnabled = false
                 remoteVideoView.isHidden = false
                 localVideoView.isHidden = false
-            case .audioCall:
-                videoCallButton.isEnabled = false
-                audioCallButton.isEnabled = false
-                answerButton.isEnabled = false
-                hangupButton.isEnabled = true
-                numberField.isHidden = false
-                numberField.isEnabled = false
-                remoteVideoView.isHidden = true
-                localVideoView.isHidden = true
-            case .hangingUp:
-                videoCallButton.isEnabled = false
-                audioCallButton.isEnabled = false
-                answerButton.isEnabled = false
-                hangupButton.isEnabled = false
-                numberField.isHidden = false
-                numberField.isEnabled = false
-                remoteVideoView.isHidden = true
-                localVideoView.isHidden = true
-            case .disconnected:
-                videoCallButton.isEnabled = false
-                audioCallButton.isEnabled = false
-                answerButton.isEnabled = false
-                hangupButton.isEnabled = false
-                numberField.isHidden = true
-                remoteVideoView.isHidden = true
-                localVideoView.isHidden = true
-            case .error(_):
+            case .error:
                 stateLabel.textColor = .red
-                videoCallButton.isEnabled = false
-                audioCallButton.isEnabled = false
-                answerButton.isEnabled = false
-                hangupButton.isEnabled = false
-                numberField.isHidden = true
-                remoteVideoView.isHidden = true
-                localVideoView.isHidden = true
+            default:
+                break
             }
             
             stateLabel.text = "\(state)"
+            
+            controlView.update(state)
+            usernameField.update(state)
         }
         
         DispatchQueue.main.async {
@@ -373,13 +313,11 @@ class MainViewController: UIViewController, UITextFieldDelegate {
     // MARK: Keyboard things
     
     func registerForKeyboardNotifications() {
-        
         observe(notif: NSNotification.Name.UIKeyboardWillShow.rawValue, selector: #selector(keyboardWillBeShown(notification:)))
         observe(notif: NSNotification.Name.UIKeyboardWillHide.rawValue, selector: #selector(keyboardWillBeHidden(notification:)))
     }
     
     func removeKeyboardNotificationsObservers() {
-        
         removeObserver(name: NSNotification.Name.UIKeyboardWillShow.rawValue)
         removeObserver(name: NSNotification.Name.UIKeyboardWillHide.rawValue)
     }
@@ -396,10 +334,10 @@ class MainViewController: UIViewController, UITextFieldDelegate {
         keyboardRect = keyboardFrame.cgRectValue
         
         UIView.animate(withDuration: animationDuration) {
-            self.numberField.snp.updateConstraints { (make) in
+            self.usernameField.snp.updateConstraints { (make) in
                 make.bottom.equalTo(-self.keyboardRect.height)
             }
-            self.numberField.superview?.layoutIfNeeded()
+            self.usernameField.superview?.layoutIfNeeded()
         }
     }
     
@@ -410,10 +348,10 @@ class MainViewController: UIViewController, UITextFieldDelegate {
         }
         
         UIView.animate(withDuration: animationDuration) {
-            self.numberField.snp.updateConstraints { (make) in
-                make.bottom.equalTo(-(type(of: self).buttonSize + 1))
+            self.usernameField.snp.updateConstraints { (make) in
+                make.bottom.equalTo(-(ControlView.height + 1))
             }
-            self.numberField.superview?.layoutIfNeeded()
+            self.usernameField.superview?.layoutIfNeeded()
         }
     }
     

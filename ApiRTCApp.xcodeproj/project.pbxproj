@@ -18,6 +18,8 @@
 		417AE7E01FA70FC200718D1A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 417AE7DE1FA70FC200718D1A /* LaunchScreen.storyboard */; };
 		417AE7F01FA7132F00718D1A /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 417AE7EE1FA7132F00718D1A /* MainViewController.swift */; };
 		417AE7F11FA7132F00718D1A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 417AE7EF1FA7132F00718D1A /* AppDelegate.swift */; };
+		41B13BF91FB3BCD900BB40CA /* ControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41B13BF81FB3BCD900BB40CA /* ControlView.swift */; };
+		41B13BFB1FB3BF8A00BB40CA /* UsernameField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41B13BFA1FB3BF8A00BB40CA /* UsernameField.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -47,6 +49,8 @@
 		417AE7E11FA70FC200718D1A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		417AE7EE1FA7132F00718D1A /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		417AE7EF1FA7132F00718D1A /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		41B13BF81FB3BCD900BB40CA /* ControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlView.swift; sourceTree = "<group>"; };
+		41B13BFA1FB3BF8A00BB40CA /* UsernameField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsernameField.swift; sourceTree = "<group>"; };
 		A137C2923977F0B37C94D2A6 /* Pods-ApiRTCApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ApiRTCApp.debug.xcconfig"; path = "../ApiRTCDev/Pods/Target Support Files/Pods-ApiRTCApp/Pods-ApiRTCApp.debug.xcconfig"; sourceTree = "<group>"; };
 		F6B701F7FA5A0050EDA5E15D /* Pods-ApiRTCApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ApiRTCApp.release.xcconfig"; path = "../ApiRTCDev/Pods/Target Support Files/Pods-ApiRTCApp/Pods-ApiRTCApp.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -142,9 +146,19 @@
 		417AE7ED1FA7132F00718D1A /* Main */ = {
 			isa = PBXGroup;
 			children = (
+				41B13BF71FB3BCAE00BB40CA /* Views */,
 				417AE7EE1FA7132F00718D1A /* MainViewController.swift */,
 			);
 			path = Main;
+			sourceTree = "<group>";
+		};
+		41B13BF71FB3BCAE00BB40CA /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				41B13BF81FB3BCD900BB40CA /* ControlView.swift */,
+				41B13BFA1FB3BF8A00BB40CA /* UsernameField.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		E0E5590D5F06CDBC38A2C9DA /* Pods */ = {
@@ -297,8 +311,10 @@
 			files = (
 				417AE7F11FA7132F00718D1A /* AppDelegate.swift in Sources */,
 				417AE7F01FA7132F00718D1A /* MainViewController.swift in Sources */,
+				41B13BFB1FB3BF8A00BB40CA /* UsernameField.swift in Sources */,
 				4119CFAF1FA8A2AC007A625F /* Config.swift in Sources */,
 				4119CFB81FA8C70A007A625F /* Utils.swift in Sources */,
+				41B13BF91FB3BCD900BB40CA /* ControlView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

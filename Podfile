@@ -9,8 +9,8 @@ target 'ApiRTCApp' do
 
   pod 'SnapKit', '~> 4.0.0'
 
-  pod 'Socket.IO-Client-Swift', '12.1.2'
-  pod 'GoogleWebRTC', '1.1.20266'
+  pod 'Socket.IO-Client-Swift', '12.1.3'
+  pod 'GoogleWebRTC', '1.1.20554'
   pod 'FontAwesome.swift'
 
 end

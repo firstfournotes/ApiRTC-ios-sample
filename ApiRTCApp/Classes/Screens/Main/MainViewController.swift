@@ -150,6 +150,7 @@ class MainViewController: UIViewController, UITextFieldDelegate {
         ApiRTC.connect()
         
         ApiRTC.rtc.initialize()
+        ApiRTC.rtc.add(localVideoView: localVideoView, remoteVideoView: remoteVideoView)
         ApiRTC.rtc.onNewSession { [weak self] session in
             DispatchQueue.main.async {
                 if self?.state == .ready {
@@ -159,7 +160,12 @@ class MainViewController: UIViewController, UITextFieldDelegate {
                 }
             }
         }
-        ApiRTC.rtc.onSessionStateChanged { [weak self] (session, state) in
+        ApiRTC.rtc.onSessionStateChanged { [weak self] session in
+            
+            guard self?.currentSession === session else {
+                return
+            }
+            
             switch session.state {
             case .onCall:
                 DispatchQueue.main.async {
@@ -192,8 +198,6 @@ class MainViewController: UIViewController, UITextFieldDelegate {
                 break
             }
         }
-
-        ApiRTC.rtc.add(localVideoView: localVideoView, remoteVideoView: remoteVideoView)
     }
     
     // MARK: Actions
@@ -205,14 +209,8 @@ class MainViewController: UIViewController, UITextFieldDelegate {
         }
         
         state = .videoCallConnecting
-        
         currentSession = ApiRTC.rtc.newSession(type: .videoCall, destinationId: number)
-        do {
-            try currentSession!.start()
-        }
-        catch {
-            print("Error: \(error)")
-        }
+        currentSession!.start()
     }
     
     @objc func tapAudioCallButton(_ button: UIButton) {
@@ -221,15 +219,9 @@ class MainViewController: UIViewController, UITextFieldDelegate {
             return
         }
         
-        state = .videoCallConnecting
-        
+        state = .audioCallConnecting
         currentSession = ApiRTC.rtc.newSession(type: .audioCall, destinationId: number)
-        do {
-            try currentSession!.start()
-        }
-        catch {
-            print("Error: \(error)")
-        }
+        currentSession!.start()
     }
     
     func getNumber() -> String? {

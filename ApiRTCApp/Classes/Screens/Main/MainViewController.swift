@@ -149,7 +149,6 @@ class MainViewController: UIViewController, UITextFieldDelegate {
         }
         ApiRTC.connect()
         
-        ApiRTC.rtc.initialize()
         ApiRTC.rtc.add(localVideoView: localVideoView, remoteVideoView: remoteVideoView)
         ApiRTC.rtc.onNewSession { [weak self] session in
             DispatchQueue.main.async {
@@ -190,9 +189,6 @@ class MainViewController: UIViewController, UITextFieldDelegate {
                 DispatchQueue.main.async {
                     self?.state = .error
                     debugPrint("Error:\(error)")
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
-                        self?.state = .ready
-                    })
                 }
             default:
                 break
@@ -233,11 +229,15 @@ class MainViewController: UIViewController, UITextFieldDelegate {
     }
     
     @objc func tapAnswerButton(_ button: UIButton) {
-        
+        answer()
+    }
+    
+    func answer() {
+
         guard let session = currentSession else {
             return
         }
-                
+        
         switch session.type {
         case .videoCall:
             state = .videoCall
@@ -251,6 +251,10 @@ class MainViewController: UIViewController, UITextFieldDelegate {
     }
     
     @objc func tapHangUpButton(_ button: UIButton) {
+        hangUp()
+    }
+    
+    func hangUp() {
         currentSession?.close()
     }
     
@@ -286,8 +290,10 @@ class MainViewController: UIViewController, UITextFieldDelegate {
             
             stateLabel.text = "\(state)"
             
-            controlView.update(state)
-            usernameField.update(state)
+            if state != .error {
+                controlView.update(state)
+                usernameField.update(state)
+            }
         }
         
         DispatchQueue.main.async {

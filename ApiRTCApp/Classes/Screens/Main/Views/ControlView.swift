@@ -75,7 +75,7 @@ class ControlView: UIView {
         hangupButton.isEnabled = false
         
         switch state {
-        case .ready, .error:
+        case .ready:
             videoCallButton.isEnabled = true
             audioCallButton.isEnabled = true
         case .incomingCall:

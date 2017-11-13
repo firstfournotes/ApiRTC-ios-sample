@@ -33,7 +33,7 @@ class UsernameField: UITextField {
         switch state {
         case .initializing:
             self.isHidden = true
-        case .ready, .error:
+        case .ready:
             self.isEnabled = true
             self.isHidden = false
         default:

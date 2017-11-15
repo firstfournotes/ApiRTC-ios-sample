@@ -13,6 +13,7 @@ import ApiRTC
 import FontAwesome_swift
 
 enum State {
+    case unknown
     case initializing
     case connecting
     case ready
@@ -51,6 +52,8 @@ class MainViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        state = .unknown
         
         self.view.backgroundColor = Config.Color.darkGray
         
@@ -116,8 +119,6 @@ class MainViewController: UIViewController, UITextFieldDelegate {
         
         registerForKeyboardNotifications()
         
-        state = .initializing
-        
         checkPerms { (ok) in
             if ok {
                 self.initializeSDK()
@@ -132,9 +133,11 @@ class MainViewController: UIViewController, UITextFieldDelegate {
     func initializeSDK() {
         
         ApiRTC.initialize(apiKey: Config.apiKey)
-        ApiRTC.settings.logTypes = [.error, .info, .warning, .debug]
+        ApiRTC.setLogTypes([.error, .info, .warning])
         ApiRTC.onStateChanged { [weak self] (state) in
             switch state {
+            case .initialized:
+                self?.state = .initializing
             case .connected:
                 self?.userIdLabel.text = "Your id".loc() + ": " + ApiRTC.user.id
                 self?.state = .ready

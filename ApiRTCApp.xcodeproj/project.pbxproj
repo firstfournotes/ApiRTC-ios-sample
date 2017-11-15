@@ -11,6 +11,8 @@
 		4119CFAF1FA8A2AC007A625F /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4119CFAE1FA8A2AC007A625F /* Config.swift */; };
 		4119CFB61FA8C6A1007A625F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4119CFB51FA8C6A1007A625F /* Localizable.strings */; };
 		4119CFB81FA8C70A007A625F /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4119CFB71FA8C70A007A625F /* Utils.swift */; };
+		415F4DF11FBCBC0000F6C582 /* ApiRTC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 415F4DF01FBCBC0000F6C582 /* ApiRTC.framework */; };
+		415F4DF21FBCBC0000F6C582 /* ApiRTC.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 415F4DF01FBCBC0000F6C582 /* ApiRTC.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		417AE7DB1FA70FC200718D1A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 417AE7D91FA70FC200718D1A /* Main.storyboard */; };
 		417AE7DD1FA70FC200718D1A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 417AE7DC1FA70FC200718D1A /* Assets.xcassets */; };
 		417AE7E01FA70FC200718D1A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 417AE7DE1FA70FC200718D1A /* LaunchScreen.storyboard */; };
@@ -27,6 +29,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				415F4DF21FBCBC0000F6C582 /* ApiRTC.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -38,6 +41,7 @@
 		4119CFAE1FA8A2AC007A625F /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		4119CFB51FA8C6A1007A625F /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		4119CFB71FA8C70A007A625F /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		415F4DF01FBCBC0000F6C582 /* ApiRTC.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ApiRTC.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		417AE7D21FA70FC200718D1A /* ApiRTCApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ApiRTCApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		417AE7DA1FA70FC200718D1A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		417AE7DC1FA70FC200718D1A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -57,6 +61,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				02CD79222724792737BD955E /* Pods_ApiRTCApp.framework in Frameworks */,
+				415F4DF11FBCBC0000F6C582 /* ApiRTC.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -91,6 +96,7 @@
 		417AE7C91FA70FC200718D1A = {
 			isa = PBXGroup;
 			children = (
+				415F4DF01FBCBC0000F6C582 /* ApiRTC.framework */,
 				417AE7D41FA70FC200718D1A /* ApiRTCApp */,
 				417AE7D31FA70FC200718D1A /* Products */,
 				152C6769D9645A6800A21014 /* Frameworks */,
@@ -261,8 +267,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-ApiRTCApp/Pods-ApiRTCApp-frameworks.sh",
-				"${PODS_ROOT}/../../ApiRTCFramework/ApiRTC.framework",
+				"${SRCROOT}/../ApiRTCDev/Pods/Target Support Files/Pods-ApiRTCApp/Pods-ApiRTCApp-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/FontAwesome.swift/FontAwesome_swift.framework",
 				"${PODS_ROOT}/GoogleWebRTC/Frameworks/frameworks/WebRTC.framework",
 				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
@@ -271,7 +276,6 @@
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ApiRTC.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FontAwesome_swift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/WebRTC.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
@@ -280,7 +284,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ApiRTCApp/Pods-ApiRTCApp-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/../ApiRTCDev/Pods/Target Support Files/Pods-ApiRTCApp/Pods-ApiRTCApp-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		8BD2E533556AEC0510C4F6A0 /* [CP] Copy Pods Resources */ = {
@@ -295,7 +299,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ApiRTCApp/Pods-ApiRTCApp-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/../ApiRTCDev/Pods/Target Support Files/Pods-ApiRTCApp/Pods-ApiRTCApp-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */

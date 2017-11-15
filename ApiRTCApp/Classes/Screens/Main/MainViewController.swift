@@ -8,8 +8,8 @@
 
 import UIKit
 import SnapKit
-import ApiRTC
 import AVFoundation
+import ApiRTC
 import FontAwesome_swift
 
 enum State {
@@ -132,7 +132,7 @@ class MainViewController: UIViewController, UITextFieldDelegate {
     func initializeSDK() {
         
         ApiRTC.initialize(apiKey: Config.apiKey)
-        ApiRTC.settings.logTypes = [.error, .info, .warning]
+        ApiRTC.settings.logTypes = [.error, .info, .warning, .debug]
         ApiRTC.onStateChanged { [weak self] (state) in
             switch state {
             case .connected:

@@ -7,9 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		28735A0FF5B98A8EA3A9C6C5 /* Pods_ApiRTCApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F1980F2F4E0A943EBA59CA8 /* Pods_ApiRTCApp.framework */; };
-		4119CEE71FA78026007A625F /* ApiRTC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4119CEE41FA77FD7007A625F /* ApiRTC.framework */; };
-		4119CEE81FA78026007A625F /* ApiRTC.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4119CEE41FA77FD7007A625F /* ApiRTC.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		02CD79222724792737BD955E /* Pods_ApiRTCApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 246836FACE0E5799035C9191 /* Pods_ApiRTCApp.framework */; };
 		4119CFAF1FA8A2AC007A625F /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4119CFAE1FA8A2AC007A625F /* Config.swift */; };
 		4119CFB61FA8C6A1007A625F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4119CFB51FA8C6A1007A625F /* Localizable.strings */; };
 		4119CFB81FA8C70A007A625F /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4119CFB71FA8C70A007A625F /* Utils.swift */; };
@@ -23,13 +21,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		4119CEE91FA78026007A625F /* Embed Frameworks */ = {
+		41171DF91FBB87C30084DF11 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				4119CEE81FA78026007A625F /* ApiRTC.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -37,8 +34,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		3F1980F2F4E0A943EBA59CA8 /* Pods_ApiRTCApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ApiRTCApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		4119CEE41FA77FD7007A625F /* ApiRTC.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ApiRTC.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		246836FACE0E5799035C9191 /* Pods_ApiRTCApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ApiRTCApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4119CFAE1FA8A2AC007A625F /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		4119CFB51FA8C6A1007A625F /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		4119CFB71FA8C70A007A625F /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
@@ -51,8 +47,8 @@
 		417AE7EF1FA7132F00718D1A /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		41B13BF81FB3BCD900BB40CA /* ControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlView.swift; sourceTree = "<group>"; };
 		41B13BFA1FB3BF8A00BB40CA /* UsernameField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsernameField.swift; sourceTree = "<group>"; };
-		A137C2923977F0B37C94D2A6 /* Pods-ApiRTCApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ApiRTCApp.debug.xcconfig"; path = "../ApiRTCDev/Pods/Target Support Files/Pods-ApiRTCApp/Pods-ApiRTCApp.debug.xcconfig"; sourceTree = "<group>"; };
-		F6B701F7FA5A0050EDA5E15D /* Pods-ApiRTCApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ApiRTCApp.release.xcconfig"; path = "../ApiRTCDev/Pods/Target Support Files/Pods-ApiRTCApp/Pods-ApiRTCApp.release.xcconfig"; sourceTree = "<group>"; };
+		A26E416D0830DEAF32EB4099 /* Pods-ApiRTCApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ApiRTCApp.release.xcconfig"; path = "Pods/Target Support Files/Pods-ApiRTCApp/Pods-ApiRTCApp.release.xcconfig"; sourceTree = "<group>"; };
+		B4A05A040E7EF7052C9AAE85 /* Pods-ApiRTCApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ApiRTCApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ApiRTCApp/Pods-ApiRTCApp.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,8 +56,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				28735A0FF5B98A8EA3A9C6C5 /* Pods_ApiRTCApp.framework in Frameworks */,
-				4119CEE71FA78026007A625F /* ApiRTC.framework in Frameworks */,
+				02CD79222724792737BD955E /* Pods_ApiRTCApp.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -71,8 +66,7 @@
 		152C6769D9645A6800A21014 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				4119CEE41FA77FD7007A625F /* ApiRTC.framework */,
-				3F1980F2F4E0A943EBA59CA8 /* Pods_ApiRTCApp.framework */,
+				246836FACE0E5799035C9191 /* Pods_ApiRTCApp.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -100,7 +94,7 @@
 				417AE7D41FA70FC200718D1A /* ApiRTCApp */,
 				417AE7D31FA70FC200718D1A /* Products */,
 				152C6769D9645A6800A21014 /* Frameworks */,
-				E0E5590D5F06CDBC38A2C9DA /* Pods */,
+				A8D339865AEBF3C08163B562 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -161,11 +155,11 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
-		E0E5590D5F06CDBC38A2C9DA /* Pods */ = {
+		A8D339865AEBF3C08163B562 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				A137C2923977F0B37C94D2A6 /* Pods-ApiRTCApp.debug.xcconfig */,
-				F6B701F7FA5A0050EDA5E15D /* Pods-ApiRTCApp.release.xcconfig */,
+				B4A05A040E7EF7052C9AAE85 /* Pods-ApiRTCApp.debug.xcconfig */,
+				A26E416D0830DEAF32EB4099 /* Pods-ApiRTCApp.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -177,13 +171,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 417AE7E41FA70FC200718D1A /* Build configuration list for PBXNativeTarget "ApiRTCApp" */;
 			buildPhases = (
-				0B013CC854782DD28EC0FC77 /* [CP] Check Pods Manifest.lock */,
+				2AE7CD236D4AB20E66745E50 /* [CP] Check Pods Manifest.lock */,
 				417AE7CE1FA70FC200718D1A /* Sources */,
 				417AE7CF1FA70FC200718D1A /* Frameworks */,
 				417AE7D01FA70FC200718D1A /* Resources */,
-				E100F4E5BA6FE29EA4B30EFC /* [CP] Embed Pods Frameworks */,
-				B0F33A60468CFEB2BFEA3A46 /* [CP] Copy Pods Resources */,
-				4119CEE91FA78026007A625F /* Embed Frameworks */,
+				74417A8EDAAA9D5F04720493 /* [CP] Embed Pods Frameworks */,
+				8BD2E533556AEC0510C4F6A0 /* [CP] Copy Pods Resources */,
+				41171DF91FBB87C30084DF11 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -243,7 +237,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		0B013CC854782DD28EC0FC77 /* [CP] Check Pods Manifest.lock */ = {
+		2AE7CD236D4AB20E66745E50 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -261,7 +255,35 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		B0F33A60468CFEB2BFEA3A46 /* [CP] Copy Pods Resources */ = {
+		74417A8EDAAA9D5F04720493 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-ApiRTCApp/Pods-ApiRTCApp-frameworks.sh",
+				"${PODS_ROOT}/../../ApiRTCFramework/ApiRTC.framework",
+				"${BUILT_PRODUCTS_DIR}/FontAwesome.swift/FontAwesome_swift.framework",
+				"${PODS_ROOT}/GoogleWebRTC/Frameworks/frameworks/WebRTC.framework",
+				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
+				"${BUILT_PRODUCTS_DIR}/Socket.IO-Client-Swift/SocketIO.framework",
+				"${BUILT_PRODUCTS_DIR}/Starscream/Starscream.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ApiRTC.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FontAwesome_swift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/WebRTC.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SocketIO.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Starscream.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ApiRTCApp/Pods-ApiRTCApp-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		8BD2E533556AEC0510C4F6A0 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -273,33 +295,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/../ApiRTCDev/Pods/Target Support Files/Pods-ApiRTCApp/Pods-ApiRTCApp-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		E100F4E5BA6FE29EA4B30EFC /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${SRCROOT}/../ApiRTCDev/Pods/Target Support Files/Pods-ApiRTCApp/Pods-ApiRTCApp-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/FontAwesome.swift/FontAwesome_swift.framework",
-				"${PODS_ROOT}/GoogleWebRTC/Frameworks/frameworks/WebRTC.framework",
-				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
-				"${BUILT_PRODUCTS_DIR}/Socket.IO-Client-Swift/SocketIO.framework",
-				"${BUILT_PRODUCTS_DIR}/Starscream/Starscream.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FontAwesome_swift.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/WebRTC.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SocketIO.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Starscream.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/../ApiRTCDev/Pods/Target Support Files/Pods-ApiRTCApp/Pods-ApiRTCApp-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ApiRTCApp/Pods-ApiRTCApp-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -388,7 +384,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -439,7 +435,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
@@ -449,7 +445,7 @@
 		};
 		417AE7E51FA70FC200718D1A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A137C2923977F0B37C94D2A6 /* Pods-ApiRTCApp.debug.xcconfig */;
+			baseConfigurationReference = B4A05A040E7EF7052C9AAE85 /* Pods-ApiRTCApp.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
@@ -459,12 +455,14 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/ApiRTCApp",
 				);
 				INFOPLIST_FILE = ApiRTCApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Apizee.ApiRTCApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				REEXPORTED_FRAMEWORK_NAMES = "";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -472,7 +470,7 @@
 		};
 		417AE7E61FA70FC200718D1A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F6B701F7FA5A0050EDA5E15D /* Pods-ApiRTCApp.release.xcconfig */;
+			baseConfigurationReference = A26E416D0830DEAF32EB4099 /* Pods-ApiRTCApp.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
@@ -482,12 +480,14 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/ApiRTCApp",
 				);
 				INFOPLIST_FILE = ApiRTCApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Apizee.ApiRTCApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				REEXPORTED_FRAMEWORK_NAMES = "";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

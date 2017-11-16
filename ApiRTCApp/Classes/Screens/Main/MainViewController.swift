@@ -208,7 +208,7 @@ class MainViewController: UIViewController, UITextFieldDelegate {
         }
         
         state = .videoCallConnecting
-        currentSession = ApiRTC.rtc.newSession(type: .videoCall, destinationId: number)
+        currentSession = ApiRTC.rtc.createSession(type: .videoCall, destinationId: number)
         currentSession!.start()
     }
     
@@ -219,7 +219,7 @@ class MainViewController: UIViewController, UITextFieldDelegate {
         }
         
         state = .audioCallConnecting
-        currentSession = ApiRTC.rtc.newSession(type: .audioCall, destinationId: number)
+        currentSession = ApiRTC.rtc.createSession(type: .audioCall, destinationId: number)
         currentSession!.start()
     }
     

@@ -151,7 +151,7 @@ class MainViewController: UIViewController, UITextFieldDelegate {
             case .connected:
                 wSelf.userIdLabel.text = "Your id".loc() + ": " + ApiRTC.user.id
                 wSelf.state = .ready
-            case .newSession(let session):
+            case .incomingSession(let session):
                 if wSelf.currentSession == nil {
                     wSelf.currentSession = session
                     DispatchQueue.main.async {

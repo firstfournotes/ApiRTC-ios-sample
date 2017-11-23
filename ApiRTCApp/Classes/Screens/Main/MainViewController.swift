@@ -140,7 +140,7 @@ class MainViewController: UIViewController, UITextFieldDelegate {
     func initializeSDK() {
         
         ApiRTC.initialize(apiKey: Config.apiKey)
-        ApiRTC.setLogTypes([.error, .info, .warning])
+        ApiRTC.setLog([.error, .info, .warning])
         ApiRTC.onEvent { [weak self] (event) in
             guard let wSelf = self else {
                 return

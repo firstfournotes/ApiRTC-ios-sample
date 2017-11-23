@@ -62,7 +62,7 @@ class MainViewController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
                 
         state = .unknown
-        
+
         self.view.backgroundColor = Config.Color.darkGray
         
         // Video views

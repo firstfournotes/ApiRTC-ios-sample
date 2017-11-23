@@ -42,9 +42,17 @@ class MainViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    var localVideoView, remoteVideoView: UIView!
+    var cameraView: CameraView!
+    var remoteVideoView: RemoteVideoView!
+    var remoteVideoTrack: VideoTrack?
     
-    var currentSession: RTCSession?
+    var currentSession: RTCSession? {
+        didSet {
+            currentSession?.onEvent { [weak self] (event) in
+                self?.handle(event: event)
+            }
+        }
+    }
     
     deinit {
         removeKeyboardNotificationsObservers()
@@ -52,20 +60,19 @@ class MainViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+                
         state = .unknown
         
         self.view.backgroundColor = Config.Color.darkGray
         
         // Video views
-        remoteVideoView = UIView(frame: self.view.bounds)
-        remoteVideoView.backgroundColor = Config.Color.darkGray
+        remoteVideoView = RemoteVideoView(frame: self.view.bounds)
         remoteVideoView.backgroundColor = UIColor.white.withAlphaComponent(0.2)
         self.view.addSubview(remoteVideoView)
 
-        localVideoView = UIView(frame: CGRect(x: Config.UI.screenSize.width * 0.7 - 20, y: 20, width: 0.3 * Config.UI.screenSize.width, height: 0.3 * Config.UI.screenSize.height))
-        localVideoView.backgroundColor = UIColor.white.withAlphaComponent(0.3)
-        self.view.addSubview(localVideoView)
+        cameraView = CameraView(frame: CGRect(x: Config.UI.screenSize.width * 0.7 - 20, y: 20, width: 0.3 * Config.UI.screenSize.width, height: 0.3 * Config.UI.screenSize.height))
+        cameraView.backgroundColor = UIColor.white.withAlphaComponent(0.3)
+        self.view.addSubview(cameraView)
         
         controlView = ControlView()
         self.view.addSubview(controlView)
@@ -134,69 +141,35 @@ class MainViewController: UIViewController, UITextFieldDelegate {
         
         ApiRTC.initialize(apiKey: Config.apiKey)
         ApiRTC.setLogTypes([.error, .info, .warning])
-        ApiRTC.onStateChanged { [weak self] (state) in
-            switch state {
-            case .initialized:
-                self?.state = .initializing
-            case .connected:
-                self?.userIdLabel.text = "Your id".loc() + ": " + ApiRTC.user.id
-                self?.state = .ready
-            case .error(let error):
-                self?.state = .error
-                debugPrint("Error:\(error)")
-            case .disconnected:
-                self?.state = .disconnected
-            default:
-                break
-            }
-        }
-        ApiRTC.connect()
-        
-        ApiRTC.rtc.add(localVideoView: localVideoView, remoteVideoView: remoteVideoView)
-        ApiRTC.rtc.onNewSession { [weak self] session in
-            DispatchQueue.main.async {
-                if self?.state == .ready {
-                    self?.usernameField.text = session.ownerId
-                    self?.currentSession = session
-                    self?.state = .incomingCall
-                }
-            }
-        }
-        ApiRTC.rtc.onSessionStateChanged { [weak self] session in
-            
-            guard self?.currentSession === session else {
+        ApiRTC.onEvent { [weak self] (event) in
+            guard let wSelf = self else {
                 return
             }
-            
-            switch session.state {
-            case .onCall:
-                DispatchQueue.main.async {
-                    switch session.type {
-                    case .videoCall:
-                        self?.state = .videoCall
-                    case .audioCall:
-                        self?.state = .audioCall
-                    default:
-                        break
+            switch event {
+            case .initialized:
+                wSelf.state = .initializing
+            case .connected:
+                wSelf.userIdLabel.text = "Your id".loc() + ": " + ApiRTC.user.id
+                wSelf.state = .ready
+            case .newSession(let session):
+                if wSelf.currentSession == nil {
+                    wSelf.currentSession = session
+                    DispatchQueue.main.async {
+                        wSelf.usernameField.text = session.ownerId
+                        wSelf.state = .incomingCall
                     }
                 }
-            case .closed:
-                self?.currentSession = nil
-                DispatchQueue.main.async {
-                    self?.state = .hangedUp
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
-                        self?.state = .ready
-                    })
-                }
             case .error(let error):
-                DispatchQueue.main.async {
-                    self?.state = .error
-                    debugPrint("Error:\(error)")
-                }
+                wSelf.state = .error
+                debugPrint("Error:\(error)")
+            case .disconnected:
+                wSelf.state = .disconnected
             default:
                 break
             }
         }
+
+        ApiRTC.connect()
     }
     
     // MARK: Actions
@@ -208,7 +181,7 @@ class MainViewController: UIViewController, UITextFieldDelegate {
         }
         
         state = .videoCallConnecting
-        currentSession = ApiRTC.rtc.createSession(type: .videoCall, destinationId: number)
+        currentSession = ApiRTC.createSession(type: .videoCall, destinationId: number)
         currentSession!.start()
     }
     
@@ -219,7 +192,7 @@ class MainViewController: UIViewController, UITextFieldDelegate {
         }
         
         state = .audioCallConnecting
-        currentSession = ApiRTC.rtc.createSession(type: .audioCall, destinationId: number)
+        currentSession = ApiRTC.createSession(type: .audioCall, destinationId: number)
         currentSession!.start()
     }
     
@@ -267,11 +240,61 @@ class MainViewController: UIViewController, UITextFieldDelegate {
     
     // MARK:
     
+    func handle(event: RTCSessionEvent) {
+        guard let session = currentSession else {
+            return
+        }
+        
+        switch event {
+        case .call:
+            DispatchQueue.main.async {
+                switch session.type {
+                case .videoCall:
+                    self.state = .videoCall
+                case .audioCall:
+                    self.state = .audioCall
+                default:
+                    break
+                }
+            }
+        case .localCaptureSession(let captureSession):
+            DispatchQueue.main.async {
+                self.cameraView.previewLayer.videoGravity = .resizeAspectFill
+                self.cameraView.captureSession = captureSession
+            }
+        case .remoteMediaStream(let mediaStream):
+            if let videoTrack = mediaStream.videoTracks.first {
+                DispatchQueue.main.async {
+                    self.remoteVideoTrack = videoTrack
+                    self.remoteVideoTrack?.add(renderer: self.remoteVideoView)
+                }
+            }
+        case .closed:
+            currentSession = nil
+            DispatchQueue.main.async {
+                self.remoteVideoTrack?.remove(renderer: self.remoteVideoView)
+                self.remoteVideoTrack = nil
+                self.cameraView.captureSession = nil
+                self.state = .hangedUp
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
+                    self.state = .ready
+                })
+            }
+        case .error(let error):
+            DispatchQueue.main.async {
+                self.state = .error
+                debugPrint("Error:\(error)")
+            }
+        }
+    }
+    
+    // MARK:
+    
     func handle(_ state: State) {
         
         func resetUI() {
             remoteVideoView.isHidden = true
-            localVideoView.isHidden = true
+            cameraView.isHidden = true
         }
         
         func handle() {
@@ -281,10 +304,10 @@ class MainViewController: UIViewController, UITextFieldDelegate {
             
             switch state {
             case .videoCallConnecting:
-                localVideoView.isHidden = false
+                cameraView.isHidden = false
             case .videoCall:
                 remoteVideoView.isHidden = false
-                localVideoView.isHidden = false
+                cameraView.isHidden = false
             case .error:
                 stateLabel.textColor = .red
             default:

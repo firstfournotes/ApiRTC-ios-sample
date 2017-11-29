@@ -21,5 +21,6 @@ struct Config {
         static let lightGray = UIColor.hex("47637a")
         static let green = UIColor.hex("80dd58")
         static let red = UIColor.hex("CC3637")
+        static let blue = UIColor.hex("36c5f9")
     }
 }

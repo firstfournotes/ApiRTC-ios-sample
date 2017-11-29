@@ -10,6 +10,8 @@ import UIKit
 
 class UsernameField: UITextField {
 
+    static let height: Float = 40
+    
     init() {
         super.init(frame: .zero)
         initUI()
@@ -20,6 +22,7 @@ class UsernameField: UITextField {
     }
     
     func initUI() {
+        self.font = UIFont.systemFont(ofSize: 24)
         self.textColor = .white
         self.backgroundColor = UIColor.white.withAlphaComponent(0.1)
         self.placeholder = "Type username".loc()

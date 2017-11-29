@@ -30,9 +30,12 @@ enum State {
 class MainViewController: UIViewController, UITextFieldDelegate {
     
     var controlView: ControlView!
+    var callToolbar: CallToolbar!
     var usernameField: UsernameField!
     var userIdLabel: UILabel!
     var stateLabel: UILabel!
+    
+    var switchCameraButton: Button!
     
     var keyboardRect: CGRect = .zero
     
@@ -93,9 +96,21 @@ class MainViewController: UIViewController, UITextFieldDelegate {
         usernameField.snp.makeConstraints { (make) in
             make.left.right.equalTo(0)
             make.bottom.equalTo(-(ControlView.height + 1))
-            make.height.equalTo(30)
+            make.height.equalTo(UsernameField.height)
         }
-
+        
+        // Toolbar
+        callToolbar = CallToolbar()
+        self.view.addSubview(callToolbar)
+        callToolbar.snp.makeConstraints { (make) in
+            make.bottom.equalTo(usernameField.snp.top).offset(-1)
+            make.right.equalTo(0)
+            make.width.equalTo(CallToolbar.width)
+            make.height.equalTo(CallToolbar.height)
+        }
+        callToolbar.switchCameraButton.addTarget(self, action: #selector(tapSwitchCameraButton(_:)), for: .touchUpInside)
+        callToolbar.isHidden = true
+        
         // Misc
         userIdLabel = UILabel()
         userIdLabel.font = UIFont.systemFont(ofSize: 12, weight: .light)
@@ -182,6 +197,7 @@ class MainViewController: UIViewController, UITextFieldDelegate {
         
         state = .videoCallConnecting
         currentSession = ApiRTC.createSession(type: .videoCall, destinationId: number)
+        
         currentSession!.start()
     }
     
@@ -295,6 +311,7 @@ class MainViewController: UIViewController, UITextFieldDelegate {
         func resetUI() {
             remoteVideoView.isHidden = true
             cameraView.isHidden = true
+            callToolbar.isHidden = true
         }
         
         func handle() {
@@ -308,6 +325,7 @@ class MainViewController: UIViewController, UITextFieldDelegate {
             case .videoCall:
                 remoteVideoView.isHidden = false
                 cameraView.isHidden = false
+                callToolbar.isHidden = false
             case .error:
                 stateLabel.textColor = .red
             default:
@@ -324,6 +342,23 @@ class MainViewController: UIViewController, UITextFieldDelegate {
         
         DispatchQueue.main.async {
             handle()
+        }
+    }
+    
+    // MARK: Toolbar actions
+    
+    @objc func tapSwitchCameraButton(_ button: UIButton) {
+        
+        if let session = currentSession as? RTCVideoSession {
+            
+            var switchedPosition: AVCaptureDevice.Position = .front
+            if session.captureDevice!.position == .front {
+                switchedPosition = .back
+            }
+
+            if let device = ApiRTC.getCaptureDevice(position: switchedPosition) {
+                session.setCapture(with: device)
+            }
         }
     }
     
@@ -399,50 +434,6 @@ class MainViewController: UIViewController, UITextFieldDelegate {
                     completion?(granted)
                 })
             });
-        }
-    }
-}
-
-class Button: UIButton {
-    
-    var bgColor: UIColor!
-    
-    init(image: UIImage, bgColor: UIColor) {
-        super.init(frame: .zero)
-        self.bgColor = bgColor
-        initUI(image: image)
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    func initUI(image: UIImage) {
-        
-        self.alpha = 0.7
-        self.backgroundColor = bgColor
-        self.setImage(image, for: .normal)
-    }
-    
-    override var isHighlighted: Bool {
-        didSet {
-            switch isHighlighted {
-            case true:
-                self.backgroundColor = bgColor.withAlphaComponent(0.5)
-            case false:
-                self.backgroundColor = bgColor
-            }
-        }
-    }
-    
-    override var isEnabled: Bool {
-        didSet {
-            switch isEnabled {
-            case true:
-                self.backgroundColor = bgColor
-            case false:
-                self.backgroundColor = Config.Color.lightGray
-            }
         }
     }
 }

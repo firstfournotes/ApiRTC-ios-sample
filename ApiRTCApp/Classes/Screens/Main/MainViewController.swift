@@ -351,14 +351,24 @@ class MainViewController: UIViewController, UITextFieldDelegate {
         
         if let session = currentSession as? RTCVideoSession {
             
-            var switchedPosition: AVCaptureDevice.Position = .front
-            if session.captureDevice!.position == .front {
-                switchedPosition = .back
-            }
-
-            if let device = ApiRTC.getCaptureDevice(position: switchedPosition) {
-                session.setCapture(with: device)
-            }
+            // FIXME: tuto
+            session.switchCamera()
+            
+            // OR:
+            
+//            var switchedPosition: AVCaptureDevice.Position = .front
+//
+//            guard let currentDevice = session.captureDevice else {
+//                return
+//            }
+//
+//            if currentDevice.position == .front {
+//                switchedPosition = .back
+//            }
+//
+//            if let device = ApiRTC.getCaptureDevice(position: switchedPosition) {
+//                session.setCapture(with: device)
+//            }
         }
     }
     

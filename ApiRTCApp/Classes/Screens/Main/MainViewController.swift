@@ -109,7 +109,7 @@ class MainViewController: UIViewController, UITextFieldDelegate {
             make.height.equalTo(CallToolbar.height)
         }
         callToolbar.switchCameraButton.addTarget(self, action: #selector(tapSwitchCameraButton(_:)), for: .touchUpInside)
-        callToolbar.isHidden = true
+        callToolbar.switchAudioButton.addTarget(self, action: #selector(tapSwitchAudioButton(_:)), for: .touchUpInside)
         
         // Misc
         userIdLabel = UILabel()
@@ -254,7 +254,28 @@ class MainViewController: UIViewController, UITextFieldDelegate {
         usernameField.resignFirstResponder()
     }
     
-    // MARK:
+    // MARK: Toolbar actions
+    
+    @objc func tapSwitchCameraButton(_ button: UIButton) {
+        
+        guard let session = currentSession as? RTCVideoSession else {
+            return
+        }
+        
+        session.switchCamera()
+    }
+    
+    @objc func tapSwitchAudioButton(_ button: UIButton) {
+        
+        guard let session = currentSession else {
+            return
+        }
+        
+        session.isLocalAudioEnabled = !session.isLocalAudioEnabled
+        callToolbar.update(isAudioEnabled: session.isLocalAudioEnabled)
+    }
+    
+    // MARK: Event handling
     
     func handle(event: RTCSessionEvent) {
         guard let session = currentSession else {
@@ -304,7 +325,7 @@ class MainViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    // MARK:
+    // MARK: State handling
     
     func handle(_ state: State) {
         
@@ -326,6 +347,8 @@ class MainViewController: UIViewController, UITextFieldDelegate {
                 remoteVideoView.isHidden = false
                 cameraView.isHidden = false
                 callToolbar.isHidden = false
+            case .audioCall:
+                callToolbar.isHidden = false
             case .error:
                 stateLabel.textColor = .red
             default:
@@ -337,38 +360,12 @@ class MainViewController: UIViewController, UITextFieldDelegate {
             if state != .error {
                 controlView.update(state)
                 usernameField.update(state)
+                callToolbar.update(state)
             }
         }
         
         DispatchQueue.main.async {
             handle()
-        }
-    }
-    
-    // MARK: Toolbar actions
-    
-    @objc func tapSwitchCameraButton(_ button: UIButton) {
-        
-        if let session = currentSession as? RTCVideoSession {
-            
-            // FIXME: tuto
-            session.switchCamera()
-            
-            // OR:
-            
-//            var switchedPosition: AVCaptureDevice.Position = .front
-//
-//            guard let currentDevice = session.captureDevice else {
-//                return
-//            }
-//
-//            if currentDevice.position == .front {
-//                switchedPosition = .back
-//            }
-//
-//            if let device = ApiRTC.getCaptureDevice(position: switchedPosition) {
-//                session.setCapture(with: device)
-//            }
         }
     }
     

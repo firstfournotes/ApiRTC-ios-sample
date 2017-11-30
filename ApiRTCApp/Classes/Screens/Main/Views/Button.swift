@@ -12,21 +12,20 @@ class Button: UIButton {
 
     var bgColor: UIColor!
     
-    init(image: UIImage, bgColor: UIColor) {
-        super.init(frame: .zero)
-        self.bgColor = bgColor
-        initUI(image: image)
-    }
+    var image: UIImage!
+    var nonActiveImage: UIImage?
     
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    func initUI(image: UIImage) {
-        
-        self.alpha = 0.7
-        self.backgroundColor = bgColor
-        self.setImage(image, for: .normal)
+    var isActive = false {
+        didSet {
+            switch isActive {
+            case true:
+                if let nonActiveImage = nonActiveImage {
+                    self.setImage(nonActiveImage, for: .normal)
+                }
+            case false:
+                self.setImage(image, for: .normal)
+            }
+        }
     }
     
     override var isHighlighted: Bool {
@@ -49,5 +48,24 @@ class Button: UIButton {
                 self.backgroundColor = Config.Color.lightGray
             }
         }
+    }
+    
+    init(image: UIImage, nonActiveImage: UIImage? = nil, bgColor: UIColor) {
+        super.init(frame: .zero)
+        self.bgColor = bgColor
+        self.image = image
+        self.nonActiveImage = nonActiveImage
+        initUI()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func initUI() {
+        
+        self.alpha = 0.7
+        self.backgroundColor = bgColor
+        self.setImage(image, for: .normal)
     }
 }

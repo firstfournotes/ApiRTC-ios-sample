@@ -10,11 +10,12 @@ import UIKit
 
 class CallToolbar: UIView {
     
-    static let height: Float = 50 * 2
+    static let height: Float = 50 * 3
     static let width: Float = 50
 
     var switchCameraButton: Button!
     var switchAudioButton: Button!
+    var switchVideoButton: Button!
     
     init() {
         super.init(frame: .zero)
@@ -45,13 +46,36 @@ class CallToolbar: UIView {
             make.height.equalTo(type(of: self).width)
             make.bottom.equalTo(switchCameraButton.snp.top).offset(-1)
         }
+        
+        switchVideoButton = Button(
+            image: UIImage.fontAwesomeIcon(name: .videoCamera, textColor: .white, size: CGSize(width: 30, height: 30)),
+            nonActiveImage: UIImage(named: "camera_off")!.withRenderingMode(UIImageRenderingMode.alwaysTemplate),
+            bgColor: UIColor.white.withAlphaComponent(0.1)
+        )
+        switchVideoButton.tintColor = .white
+        self.addSubview(switchVideoButton)
+        switchVideoButton.snp.makeConstraints { (make) in
+            make.left.right.equalTo(0)
+            make.height.equalTo(type(of: self).width)
+            make.bottom.equalTo(switchAudioButton.snp.top).offset(-1)
+        }
     }
     
     func update(_ state: State) {
-        
+        switch state {
+        case .videoCall, .incomingCall:
+            switchAudioButton.isActive = true
+            switchVideoButton.isActive = true
+        default:
+            break
+        }
     }
     
     func update(isAudioEnabled: Bool) {
-        switchAudioButton.isActive = !isAudioEnabled
+        switchAudioButton.isActive = isAudioEnabled
+    }
+    
+    func update(isVideoEnabled: Bool) {
+        switchVideoButton.isActive = isVideoEnabled
     }
 }

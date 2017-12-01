@@ -110,6 +110,7 @@ class MainViewController: UIViewController, UITextFieldDelegate {
         }
         callToolbar.switchCameraButton.addTarget(self, action: #selector(tapSwitchCameraButton(_:)), for: .touchUpInside)
         callToolbar.switchAudioButton.addTarget(self, action: #selector(tapSwitchAudioButton(_:)), for: .touchUpInside)
+        callToolbar.switchVideoButton.addTarget(self, action: #selector(tapSwitchVideoButton(_:)), for: .touchUpInside)
         
         // Misc
         userIdLabel = UILabel()
@@ -273,6 +274,18 @@ class MainViewController: UIViewController, UITextFieldDelegate {
         
         session.isLocalAudioEnabled = !session.isLocalAudioEnabled
         callToolbar.update(isAudioEnabled: session.isLocalAudioEnabled)
+    }
+    
+    @objc func tapSwitchVideoButton(_ button: UIButton) {
+        
+        guard let session = currentSession as? RTCVideoSession else {
+            return
+        }
+        
+        let isCapturing = session.isCapturing
+        isCapturing ? session.stopCapture() : session.startCapture()
+        callToolbar.update(isVideoEnabled: !isCapturing)
+        cameraView.isHidden = isCapturing
     }
     
     // MARK: Event handling

@@ -19,11 +19,11 @@ class Button: UIButton {
         didSet {
             switch isActive {
             case true:
+                self.setImage(image, for: .normal)
+            case false:
                 if let nonActiveImage = nonActiveImage {
                     self.setImage(nonActiveImage, for: .normal)
                 }
-            case false:
-                self.setImage(image, for: .normal)
             }
         }
     }

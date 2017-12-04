@@ -16,22 +16,22 @@
 		417AE7E01FA70FC200718D1A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 417AE7DE1FA70FC200718D1A /* LaunchScreen.storyboard */; };
 		417AE7F01FA7132F00718D1A /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 417AE7EE1FA7132F00718D1A /* MainViewController.swift */; };
 		417AE7F11FA7132F00718D1A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 417AE7EF1FA7132F00718D1A /* AppDelegate.swift */; };
-		4186885F1FCD74F0003EABC9 /* ApiRTC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4186885E1FCD74F0003EABC9 /* ApiRTC.framework */; };
-		418688601FCD74F0003EABC9 /* ApiRTC.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4186885E1FCD74F0003EABC9 /* ApiRTC.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		418688631FCD8D6C003EABC9 /* CallToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 418688621FCD8D6C003EABC9 /* CallToolbar.swift */; };
 		418688651FCD8D97003EABC9 /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 418688641FCD8D97003EABC9 /* Button.swift */; };
+		419DDCF11FD1899400B40239 /* ApiRTC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 419DDCF01FD1899400B40239 /* ApiRTC.framework */; };
+		419DDCF21FD1899400B40239 /* ApiRTC.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 419DDCF01FD1899400B40239 /* ApiRTC.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		41B13BF91FB3BCD900BB40CA /* ControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41B13BF81FB3BCD900BB40CA /* ControlView.swift */; };
 		41B13BFB1FB3BF8A00BB40CA /* UsernameField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41B13BFA1FB3BF8A00BB40CA /* UsernameField.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		418688611FCD74F0003EABC9 /* Embed Frameworks */ = {
+		419DDCF31FD1899400B40239 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				418688601FCD74F0003EABC9 /* ApiRTC.framework in Embed Frameworks */,
+				419DDCF21FD1899400B40239 /* ApiRTC.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -50,13 +50,14 @@
 		417AE7E11FA70FC200718D1A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		417AE7EE1FA7132F00718D1A /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		417AE7EF1FA7132F00718D1A /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		4186885E1FCD74F0003EABC9 /* ApiRTC.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ApiRTC.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		418688621FCD8D6C003EABC9 /* CallToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallToolbar.swift; sourceTree = "<group>"; };
 		418688641FCD8D97003EABC9 /* Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
+		419DDCF01FD1899400B40239 /* ApiRTC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApiRTC.framework; path = Pods/ApiRTC/ApiRTC.framework; sourceTree = "<group>"; };
 		41B13BF81FB3BCD900BB40CA /* ControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlView.swift; sourceTree = "<group>"; };
 		41B13BFA1FB3BF8A00BB40CA /* UsernameField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsernameField.swift; sourceTree = "<group>"; };
 		A26E416D0830DEAF32EB4099 /* Pods-ApiRTCApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ApiRTCApp.release.xcconfig"; path = "Pods/Target Support Files/Pods-ApiRTCApp/Pods-ApiRTCApp.release.xcconfig"; sourceTree = "<group>"; };
 		B4A05A040E7EF7052C9AAE85 /* Pods-ApiRTCApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ApiRTCApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ApiRTCApp/Pods-ApiRTCApp.debug.xcconfig"; sourceTree = "<group>"; };
+		CC0C2856DB73537FB6C0E31A9E6EE38D /* ApiRTC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ApiRTC.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,7 +66,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				02CD79222724792737BD955E /* Pods_ApiRTCApp.framework in Frameworks */,
-				4186885F1FCD74F0003EABC9 /* ApiRTC.framework in Frameworks */,
+				419DDCF11FD1899400B40239 /* ApiRTC.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -100,11 +101,12 @@
 		417AE7C91FA70FC200718D1A = {
 			isa = PBXGroup;
 			children = (
-				4186885E1FCD74F0003EABC9 /* ApiRTC.framework */,
+				419DDCF01FD1899400B40239 /* ApiRTC.framework */,
 				417AE7D41FA70FC200718D1A /* ApiRTCApp */,
 				417AE7D31FA70FC200718D1A /* Products */,
 				152C6769D9645A6800A21014 /* Frameworks */,
 				A8D339865AEBF3C08163B562 /* Pods */,
+				419DDCEF1FD1894200B40239 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -156,6 +158,14 @@
 			path = Main;
 			sourceTree = "<group>";
 		};
+		419DDCEF1FD1894200B40239 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				CC0C2856DB73537FB6C0E31A9E6EE38D /* ApiRTC.framework */,
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
 		41B13BF71FB3BCAE00BB40CA /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -189,7 +199,7 @@
 				417AE7D01FA70FC200718D1A /* Resources */,
 				74417A8EDAAA9D5F04720493 /* [CP] Embed Pods Frameworks */,
 				8BD2E533556AEC0510C4F6A0 /* [CP] Copy Pods Resources */,
-				418688611FCD74F0003EABC9 /* Embed Frameworks */,
+				419DDCF31FD1899400B40239 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -468,6 +478,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/ApiRTCApp",
+					"$(PROJECT_DIR)/Pods/ApiRTC",
 				);
 				INFOPLIST_FILE = ApiRTCApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -494,6 +505,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/ApiRTCApp",
+					"$(PROJECT_DIR)/Pods/ApiRTC",
 				);
 				INFOPLIST_FILE = ApiRTCApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;

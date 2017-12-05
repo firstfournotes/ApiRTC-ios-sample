@@ -283,7 +283,8 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/../ApiRTCDev/Pods/Target Support Files/Pods-ApiRTCApp/Pods-ApiRTCApp-frameworks.sh",
+				"${SRCROOT}/Pods/Target Support Files/Pods-ApiRTCApp/Pods-ApiRTCApp-frameworks.sh",
+				"${PODS_ROOT}/ApiRTC/ApiRTC.framework",
 				"${BUILT_PRODUCTS_DIR}/FontAwesome.swift/FontAwesome_swift.framework",
 				"${PODS_ROOT}/GoogleWebRTC/Frameworks/frameworks/WebRTC.framework",
 				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
@@ -292,6 +293,7 @@
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ApiRTC.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FontAwesome_swift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/WebRTC.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
@@ -300,7 +302,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/../ApiRTCDev/Pods/Target Support Files/Pods-ApiRTCApp/Pods-ApiRTCApp-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ApiRTCApp/Pods-ApiRTCApp-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		8BD2E533556AEC0510C4F6A0 /* [CP] Copy Pods Resources */ = {
@@ -315,7 +317,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/../ApiRTCDev/Pods/Target Support Files/Pods-ApiRTCApp/Pods-ApiRTCApp-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ApiRTCApp/Pods-ApiRTCApp-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */

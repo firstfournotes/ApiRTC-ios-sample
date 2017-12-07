@@ -177,9 +177,12 @@ class MainViewController: UIViewController, UITextFieldDelegate {
                 }
             case .error(let error):
                 wSelf.state = .error
-                debugPrint("Error:\(error)")
-            case .disconnected:
+                debugPrint("Error: \(error)")
+            case .disconnected(let error):
                 wSelf.state = .disconnected
+                if let error = error {
+                    debugPrint("Disconnected with error: \(error)")
+                }
             default:
                 break
             }

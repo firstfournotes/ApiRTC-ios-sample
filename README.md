@@ -8,7 +8,7 @@ cd ApiRTC-ios-sample/
 ```
 
 ```
-pod install
+pod update
 ```
 
 Then start `ApiRTCApp.xcworkspace`

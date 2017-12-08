@@ -11,6 +11,7 @@
 		4119CFAF1FA8A2AC007A625F /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4119CFAE1FA8A2AC007A625F /* Config.swift */; };
 		4119CFB61FA8C6A1007A625F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4119CFB51FA8C6A1007A625F /* Localizable.strings */; };
 		4119CFB81FA8C70A007A625F /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4119CFB71FA8C70A007A625F /* Utils.swift */; };
+		4166EE011FDAB5AA00F57C6A /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 4166EE001FDAB5A900F57C6A /* README.md */; };
 		417AE7DB1FA70FC200718D1A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 417AE7D91FA70FC200718D1A /* Main.storyboard */; };
 		417AE7DD1FA70FC200718D1A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 417AE7DC1FA70FC200718D1A /* Assets.xcassets */; };
 		417AE7E01FA70FC200718D1A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 417AE7DE1FA70FC200718D1A /* LaunchScreen.storyboard */; };
@@ -43,6 +44,7 @@
 		4119CFAE1FA8A2AC007A625F /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		4119CFB51FA8C6A1007A625F /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		4119CFB71FA8C70A007A625F /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		4166EE001FDAB5A900F57C6A /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		417AE7D21FA70FC200718D1A /* ApiRTCApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ApiRTCApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		417AE7DA1FA70FC200718D1A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		417AE7DC1FA70FC200718D1A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -101,6 +103,7 @@
 		417AE7C91FA70FC200718D1A = {
 			isa = PBXGroup;
 			children = (
+				4166EE001FDAB5A900F57C6A /* README.md */,
 				419DDCF01FD1899400B40239 /* ApiRTC.framework */,
 				417AE7D41FA70FC200718D1A /* ApiRTCApp */,
 				417AE7D31FA70FC200718D1A /* Products */,
@@ -259,6 +262,7 @@
 			files = (
 				417AE7E01FA70FC200718D1A /* LaunchScreen.storyboard in Resources */,
 				4119CFB61FA8C6A1007A625F /* Localizable.strings in Resources */,
+				4166EE011FDAB5AA00F57C6A /* README.md in Resources */,
 				417AE7DD1FA70FC200718D1A /* Assets.xcassets in Resources */,
 				417AE7DB1FA70FC200718D1A /* Main.storyboard in Resources */,
 			);

@@ -22,7 +22,6 @@ enum State {
     case audioCallConnecting
     case videoCall
     case audioCall
-    case hangedUp
     case disconnected
     case error
 }
@@ -179,6 +178,7 @@ class MainViewController: UIViewController, UITextFieldDelegate {
                 wSelf.state = .error
                 debugPrint("Error: \(error)")
             case .disconnected(let error):
+                wSelf.hangUp()
                 wSelf.state = .disconnected
                 if let error = error {
                     debugPrint("Disconnected with error: \(error)")
@@ -251,6 +251,9 @@ class MainViewController: UIViewController, UITextFieldDelegate {
     }
     
     func hangUp() {
+        self.remoteVideoTrack?.remove(renderer: self.remoteVideoView)
+        self.remoteVideoTrack = nil
+        self.cameraView.captureSession = nil
         currentSession?.close()
     }
     
@@ -325,13 +328,10 @@ class MainViewController: UIViewController, UITextFieldDelegate {
         case .closed:
             currentSession = nil
             DispatchQueue.main.async {
-                self.remoteVideoTrack?.remove(renderer: self.remoteVideoView)
-                self.remoteVideoTrack = nil
-                self.cameraView.captureSession = nil
-                self.state = .hangedUp
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
-                    self.state = .ready
-                })
+                if self.state == .disconnected {
+                    return
+                }
+                self.state = .ready
             }
         case .error(let error):
             DispatchQueue.main.async {

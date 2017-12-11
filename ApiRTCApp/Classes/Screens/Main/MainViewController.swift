@@ -254,9 +254,6 @@ class MainViewController: UIViewController, UITextFieldDelegate {
     }
     
     func hangUp() {
-        self.remoteVideoTrack?.remove(renderer: self.remoteVideoView.renderer)
-        self.remoteVideoTrack = nil
-        self.cameraView.captureSession = nil
         currentSession?.close()
     }
     
@@ -330,6 +327,9 @@ class MainViewController: UIViewController, UITextFieldDelegate {
             }
         case .closed:
             currentSession = nil
+            self.remoteVideoTrack?.remove(renderer: self.remoteVideoView.renderer)
+            self.remoteVideoTrack = nil
+            self.cameraView.captureSession = nil
             DispatchQueue.main.async {
                 if self.state == .disconnected {
                     return

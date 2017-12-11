@@ -45,7 +45,7 @@ class MainViewController: UIViewController, UITextFieldDelegate {
     }
     
     var cameraView: CameraView!
-    var remoteVideoView: RemoteVideoView!
+    var remoteVideoView: EAGLVideoView!
     var remoteVideoTrack: VideoTrack?
     
     var currentSession: RTCSession? {
@@ -62,13 +62,14 @@ class MainViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-                
+    
         state = .unknown
 
         self.view.backgroundColor = Config.Color.darkGray
         
         // Video views
-        remoteVideoView = RemoteVideoView(frame: self.view.bounds)
+        remoteVideoView = EAGLVideoView(frame: self.view.bounds)
+        remoteVideoView.contentMode = .scaleAspectFit
         remoteVideoView.backgroundColor = UIColor.white.withAlphaComponent(0.2)
         self.view.addSubview(remoteVideoView)
 
@@ -251,7 +252,7 @@ class MainViewController: UIViewController, UITextFieldDelegate {
     }
     
     func hangUp() {
-        self.remoteVideoTrack?.remove(renderer: self.remoteVideoView)
+        self.remoteVideoTrack?.remove(renderer: self.remoteVideoView.renderer)
         self.remoteVideoTrack = nil
         self.cameraView.captureSession = nil
         currentSession?.close()
@@ -268,7 +269,7 @@ class MainViewController: UIViewController, UITextFieldDelegate {
         guard let session = currentSession as? RTCVideoSession else {
             return
         }
-        
+
         session.switchCamera()
     }
     
@@ -322,7 +323,7 @@ class MainViewController: UIViewController, UITextFieldDelegate {
             if let videoTrack = mediaStream.videoTracks.first {
                 DispatchQueue.main.async {
                     self.remoteVideoTrack = videoTrack
-                    self.remoteVideoTrack?.add(renderer: self.remoteVideoView)
+                    self.remoteVideoTrack?.add(renderer: self.remoteVideoView.renderer)
                 }
             }
         case .closed:

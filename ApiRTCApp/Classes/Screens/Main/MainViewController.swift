@@ -168,12 +168,14 @@ class MainViewController: UIViewController, UITextFieldDelegate {
                 wSelf.userIdLabel.text = "Your id".loc() + ": " + ApiRTC.user.id
                 wSelf.state = .ready
             case .incomingSession(let session):
-                if wSelf.currentSession == nil {
-                    wSelf.currentSession = session
-                    DispatchQueue.main.async {
-                        wSelf.usernameField.text = session.ownerId
-                        wSelf.state = .incomingCall
-                    }
+                guard wSelf.currentSession == nil else {
+                    session.close()
+                    return
+                }
+                wSelf.currentSession = session
+                DispatchQueue.main.async {
+                    wSelf.usernameField.text = session.ownerId
+                    wSelf.state = .incomingCall
                 }
             case .error(let error):
                 wSelf.state = .error

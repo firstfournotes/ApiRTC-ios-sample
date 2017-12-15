@@ -1,5 +1,5 @@
 //
-//  ControlView.swift
+//  CallBar.swift
 //  ApiRTCApp
 //
 //  Created by Aleksandr Khorobrykh on 09/11/2017.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ControlView: UIView {
+class CallBar: UIView {
     
     var videoCallButton: UIButton!
     var audioCallButton: UIButton!
@@ -81,7 +81,7 @@ class ControlView: UIView {
         case .incomingCall:
             answerButton.isEnabled = true
             hangupButton.isEnabled = true
-        case .videoCallConnecting, .audioCallConnecting, .videoCall, .audioCall:
+        case .videoCallStarting, .audioCallStarting, .videoCall, .audioCall:
             hangupButton.isEnabled = true
         default:
             break

@@ -18,8 +18,8 @@ enum State {
     case connecting
     case ready
     case incomingCall
-    case videoCallConnecting
-    case audioCallConnecting
+    case videoCallStarting
+    case audioCallStarting
     case videoCall
     case audioCall
     case disconnected
@@ -28,8 +28,9 @@ enum State {
 
 class MainViewController: UIViewController, UITextFieldDelegate {
     
-    var controlView: ControlView!
-    var callToolbar: CallToolbar!
+    var callBar: CallBar!
+    var callSettingsBar: CallSettingsBar!
+    var toolBar: ToolBar!
     var usernameField: UsernameField!
     var userIdLabel: UILabel!
     var stateLabel: UILabel!
@@ -48,9 +49,9 @@ class MainViewController: UIViewController, UITextFieldDelegate {
     var remoteVideoView: EAGLVideoView!
     var remoteVideoTrack: VideoTrack?
     
-    var currentSession: RTCSession? {
+    var currentCall: Call? {
         didSet {
-            currentSession?.onEvent { [weak self] (event) in
+            currentCall?.onEvent { [weak self] (event) in
                 self?.handle(event: event)
             }
         }
@@ -77,16 +78,16 @@ class MainViewController: UIViewController, UITextFieldDelegate {
         cameraView.backgroundColor = UIColor.white.withAlphaComponent(0.3)
         self.view.addSubview(cameraView)
         
-        controlView = ControlView()
-        self.view.addSubview(controlView)
-        controlView.snp.makeConstraints { (make) in
+        callBar = CallBar()
+        self.view.addSubview(callBar)
+        callBar.snp.makeConstraints { (make) in
             make.left.right.bottom.equalTo(0)
-            make.height.equalTo(ControlView.height)
+            make.height.equalTo(CallBar.height)
         }
-        controlView.videoCallButton.addTarget(self, action: #selector(tapVideoCallButton(_:)), for: .touchUpInside)
-        controlView.audioCallButton.addTarget(self, action: #selector(tapAudioCallButton(_:)), for: .touchUpInside)
-        controlView.answerButton.addTarget(self, action: #selector(tapAnswerButton(_:)), for: .touchUpInside)
-        controlView.hangupButton.addTarget(self, action: #selector(tapHangUpButton(_:)), for: .touchUpInside)
+        callBar.videoCallButton.addTarget(self, action: #selector(tapVideoCallButton(_:)), for: .touchUpInside)
+        callBar.audioCallButton.addTarget(self, action: #selector(tapAudioCallButton(_:)), for: .touchUpInside)
+        callBar.answerButton.addTarget(self, action: #selector(tapAnswerButton(_:)), for: .touchUpInside)
+        callBar.hangupButton.addTarget(self, action: #selector(tapHangUpButton(_:)), for: .touchUpInside)
         
         // Number
         usernameField = UsernameField()
@@ -95,22 +96,22 @@ class MainViewController: UIViewController, UITextFieldDelegate {
         self.view.addSubview(usernameField)
         usernameField.snp.makeConstraints { (make) in
             make.left.right.equalTo(0)
-            make.bottom.equalTo(-(ControlView.height + 1))
+            make.bottom.equalTo(-(CallBar.height + 1))
             make.height.equalTo(UsernameField.height)
         }
         
         // Toolbar
-        callToolbar = CallToolbar()
-        self.view.addSubview(callToolbar)
-        callToolbar.snp.makeConstraints { (make) in
+        callSettingsBar = CallSettingsBar()
+        self.view.addSubview(callSettingsBar)
+        callSettingsBar.snp.makeConstraints { (make) in
             make.bottom.equalTo(usernameField.snp.top).offset(-1)
             make.right.equalTo(0)
-            make.width.equalTo(CallToolbar.width)
-            make.height.equalTo(CallToolbar.height)
+            make.width.equalTo(CallSettingsBar.width)
+            make.height.equalTo(CallSettingsBar.height)
         }
-        callToolbar.switchCameraButton.addTarget(self, action: #selector(tapSwitchCameraButton(_:)), for: .touchUpInside)
-        callToolbar.switchAudioButton.addTarget(self, action: #selector(tapSwitchAudioButton(_:)), for: .touchUpInside)
-        callToolbar.switchVideoButton.addTarget(self, action: #selector(tapSwitchVideoButton(_:)), for: .touchUpInside)
+        callSettingsBar.switchCameraButton.addTarget(self, action: #selector(tapSwitchCameraButton(_:)), for: .touchUpInside)
+        callSettingsBar.switchAudioButton.addTarget(self, action: #selector(tapSwitchAudioButton(_:)), for: .touchUpInside)
+        callSettingsBar.switchVideoButton.addTarget(self, action: #selector(tapSwitchVideoButton(_:)), for: .touchUpInside)
         
         // Misc
         userIdLabel = UILabel()
@@ -136,6 +137,15 @@ class MainViewController: UIViewController, UITextFieldDelegate {
             make.right.equalTo(-5)
         }
         
+        toolBar = ToolBar()
+        self.view.addSubview(toolBar)
+        toolBar.snp.makeConstraints { (make) in
+            make.top.equalTo(stateLabel.snp.bottom).offset(2)
+            make.left.right.equalTo(0)
+            make.height.equalTo(ToolBar.height)
+        }
+        toolBar.actionsButton.addTarget(self, action: #selector(tapActionsButton(_:)), for: .touchUpInside)
+        
         let swipeGR = UISwipeGestureRecognizer(target: self, action: #selector(swipeDown(_:)))
         swipeGR.direction = .down
         self.view.addGestureRecognizer(swipeGR)
@@ -149,6 +159,11 @@ class MainViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.isNavigationBarHidden = true
+    }
+    
     override var prefersStatusBarHidden: Bool {
         return true
     }
@@ -157,7 +172,8 @@ class MainViewController: UIViewController, UITextFieldDelegate {
         
         ApiRTC.initialize(apiKey: Config.apiKey)
         ApiRTC.setLog([.error, .info, .warning])
-        ApiRTC.onEvent { [weak self] (event) in
+        
+        ApiRTC.session.onEvent { [weak self] (event) in
             guard let wSelf = self else {
                 return
             }
@@ -165,16 +181,16 @@ class MainViewController: UIViewController, UITextFieldDelegate {
             case .initialized:
                 wSelf.state = .initializing
             case .connected:
-                wSelf.userIdLabel.text = "Your id".loc() + ": " + ApiRTC.user.id
+                wSelf.userIdLabel.text = "Your id".loc() + ": " + ApiRTC.session.user.id
                 wSelf.state = .ready
-            case .incomingSession(let session):
-                guard wSelf.currentSession == nil else {
-                    session.close()
+            case .incomingCall(let call):
+                guard wSelf.currentCall == nil else {
+                    call.close()
                     return
                 }
-                wSelf.currentSession = session
+                wSelf.currentCall = call
                 DispatchQueue.main.async {
-                    wSelf.usernameField.text = session.ownerId
+                    wSelf.usernameField.text = call.ownerId
                     wSelf.state = .incomingCall
                 }
             case .error(let error):
@@ -191,21 +207,21 @@ class MainViewController: UIViewController, UITextFieldDelegate {
             }
         }
 
-        ApiRTC.connect()
+        ApiRTC.session.connect()
     }
     
-    // MARK: Actions
+    // MARK: CallBar actions
     
     @objc func tapVideoCallButton(_ button: UIButton) {
-        
+
         guard let number = getNumber() else {
             return
         }
+
+        state = .videoCallStarting
         
-        state = .videoCallConnecting
-        currentSession = ApiRTC.createSession(type: .videoCall, destinationId: number)
-        
-        currentSession!.start()
+        currentCall = ApiRTC.session.createCall(type: .video, destinationId: number)
+        currentCall!.start()
     }
     
     @objc func tapAudioCallButton(_ button: UIButton) {
@@ -214,9 +230,9 @@ class MainViewController: UIViewController, UITextFieldDelegate {
             return
         }
         
-        state = .audioCallConnecting
-        currentSession = ApiRTC.createSession(type: .audioCall, destinationId: number)
-        currentSession!.start()
+        state = .audioCallStarting
+        currentCall = ApiRTC.session.createCall(type: .audio, destinationId: number)
+        currentCall!.start()
     }
     
     func getNumber() -> String? {
@@ -233,20 +249,20 @@ class MainViewController: UIViewController, UITextFieldDelegate {
     
     func answer() {
 
-        guard let session = currentSession else {
+        guard let call = currentCall else {
             return
         }
         
-        switch session.type {
-        case .videoCall:
+        switch call.type {
+        case .video:
             state = .videoCall
-        case .audioCall:
+        case .audio:
             state = .audioCall
         default:
             break
         }
         
-        session.answer()
+        call.answer()
     }
     
     @objc func tapHangUpButton(_ button: UIButton) {
@@ -254,60 +270,66 @@ class MainViewController: UIViewController, UITextFieldDelegate {
     }
     
     func hangUp() {
-        currentSession?.close()
+        currentCall?.close()
     }
     
     @objc func swipeDown(_ gr: UISwipeGestureRecognizer) {
         usernameField.resignFirstResponder()
     }
     
-    // MARK: Toolbar actions
+    // MARK: CallSettingsBar actions
     
     @objc func tapSwitchCameraButton(_ button: UIButton) {
         
-        guard let session = currentSession as? RTCVideoSession else {
+        guard let call = currentCall as? VideoCall else {
             return
         }
 
-        session.switchCamera()
+        call.switchCamera()
     }
     
     @objc func tapSwitchAudioButton(_ button: UIButton) {
         
-        guard let session = currentSession else {
+        guard let call = currentCall else {
             return
         }
         
-        session.isLocalAudioEnabled = !session.isLocalAudioEnabled
-        callToolbar.update(isAudioEnabled: session.isLocalAudioEnabled)
+        call.isLocalAudioEnabled = !call.isLocalAudioEnabled
+        callSettingsBar.update(isAudioEnabled: call.isLocalAudioEnabled)
     }
     
     @objc func tapSwitchVideoButton(_ button: UIButton) {
         
-        guard let session = currentSession as? RTCVideoSession else {
+        guard let call = currentCall as? VideoCall else {
             return
         }
         
-        let isCapturing = session.isCapturing
-        isCapturing ? session.stopCapture() : session.startCapture()
-        callToolbar.update(isVideoEnabled: !isCapturing)
+        let isCapturing = call.isCapturing
+        isCapturing ? call.stopCapture() : call.startCapture()
+        callSettingsBar.update(isVideoEnabled: !isCapturing)
         cameraView.isHidden = isCapturing
+    }
+    
+    // MARK: ToolBar actions
+    
+    @objc func tapActionsButton(_ button: UIButton) {
+        self.navigationController?.pushViewController(ActionsViewController(), animated: true)
     }
     
     // MARK: Event handling
     
-    func handle(event: RTCSessionEvent) {
-        guard let session = currentSession else {
+    func handle(event: CallEvent) {
+        guard let call = currentCall else {
             return
         }
         
         switch event {
         case .call:
             DispatchQueue.main.async {
-                switch session.type {
-                case .videoCall:
+                switch call.type {
+                case .video:
                     self.state = .videoCall
-                case .audioCall:
+                case .audio:
                     self.state = .audioCall
                 default:
                     break
@@ -326,7 +348,7 @@ class MainViewController: UIViewController, UITextFieldDelegate {
                 }
             }
         case .closed:
-            currentSession = nil
+            currentCall = nil
             self.remoteVideoTrack?.remove(renderer: self.remoteVideoView.renderer)
             self.remoteVideoTrack = nil
             self.cameraView.captureSession = nil
@@ -351,7 +373,7 @@ class MainViewController: UIViewController, UITextFieldDelegate {
         func resetUI() {
             remoteVideoView.isHidden = true
             cameraView.isHidden = true
-            callToolbar.isHidden = true
+            callSettingsBar.isHidden = true
         }
         
         func handle() {
@@ -360,14 +382,14 @@ class MainViewController: UIViewController, UITextFieldDelegate {
             resetUI()
             
             switch state {
-            case .videoCallConnecting:
+            case .videoCallStarting:
                 cameraView.isHidden = false
             case .videoCall:
                 remoteVideoView.isHidden = false
                 cameraView.isHidden = false
-                callToolbar.isHidden = false
+                callSettingsBar.isHidden = false
             case .audioCall:
-                callToolbar.isHidden = false
+                callSettingsBar.isHidden = false
             case .error:
                 stateLabel.textColor = .red
             default:
@@ -377,9 +399,9 @@ class MainViewController: UIViewController, UITextFieldDelegate {
             stateLabel.text = "\(state)"
             
             if state != .error {
-                controlView.update(state)
+                callBar.update(state)
                 usernameField.update(state)
-                callToolbar.update(state)
+                callSettingsBar.update(state)
             }
         }
         
@@ -434,7 +456,7 @@ class MainViewController: UIViewController, UITextFieldDelegate {
         
         UIView.animate(withDuration: animationDuration) {
             self.usernameField.snp.updateConstraints { (make) in
-                make.bottom.equalTo(-(ControlView.height + 1))
+                make.bottom.equalTo(-(CallBar.height + 1))
             }
             self.usernameField.superview?.layoutIfNeeded()
         }

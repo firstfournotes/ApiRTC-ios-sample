@@ -17,25 +17,27 @@
 		417AE7E01FA70FC200718D1A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 417AE7DE1FA70FC200718D1A /* LaunchScreen.storyboard */; };
 		417AE7F01FA7132F00718D1A /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 417AE7EE1FA7132F00718D1A /* MainViewController.swift */; };
 		417AE7F11FA7132F00718D1A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 417AE7EF1FA7132F00718D1A /* AppDelegate.swift */; };
-		418688631FCD8D6C003EABC9 /* CallToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 418688621FCD8D6C003EABC9 /* CallToolbar.swift */; };
+		418688631FCD8D6C003EABC9 /* CallSettingsBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 418688621FCD8D6C003EABC9 /* CallSettingsBar.swift */; };
 		418688651FCD8D97003EABC9 /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 418688641FCD8D97003EABC9 /* Button.swift */; };
-		419DDCF11FD1899400B40239 /* ApiRTC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 419DDCF01FD1899400B40239 /* ApiRTC.framework */; };
-		419DDCF21FD1899400B40239 /* ApiRTC.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 419DDCF01FD1899400B40239 /* ApiRTC.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		41B13BF91FB3BCD900BB40CA /* ControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41B13BF81FB3BCD900BB40CA /* ControlView.swift */; };
+		41AC007A1FE2D537002AB39B /* ActionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AC00791FE2D537002AB39B /* ActionsViewController.swift */; };
+		41AC007C1FE2D7E5002AB39B /* ToolBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AC007B1FE2D7E5002AB39B /* ToolBar.swift */; };
+		41B13BF91FB3BCD900BB40CA /* CallBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41B13BF81FB3BCD900BB40CA /* CallBar.swift */; };
 		41B13BFB1FB3BF8A00BB40CA /* UsernameField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41B13BFA1FB3BF8A00BB40CA /* UsernameField.swift */; };
 		41C653491FE0015C00BAA3B2 /* iTunesArtwork@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 41C653461FE0015C00BAA3B2 /* iTunesArtwork@2x.png */; };
 		41C6534A1FE0015C00BAA3B2 /* iTunesArtwork@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 41C653471FE0015C00BAA3B2 /* iTunesArtwork@3x.png */; };
 		41C6534B1FE0015C00BAA3B2 /* iTunesArtwork@1x.png in Resources */ = {isa = PBXBuildFile; fileRef = 41C653481FE0015C00BAA3B2 /* iTunesArtwork@1x.png */; };
+		41FA810E1FE411CE002B3D64 /* ApiRTC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41FA810D1FE411CE002B3D64 /* ApiRTC.framework */; };
+		41FA810F1FE411CE002B3D64 /* ApiRTC.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 41FA810D1FE411CE002B3D64 /* ApiRTC.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		419DDCF31FD1899400B40239 /* Embed Frameworks */ = {
+		41FA81101FE411CF002B3D64 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				419DDCF21FD1899400B40239 /* ApiRTC.framework in Embed Frameworks */,
+				41FA810F1FE411CE002B3D64 /* ApiRTC.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -55,14 +57,17 @@
 		417AE7E11FA70FC200718D1A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		417AE7EE1FA7132F00718D1A /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		417AE7EF1FA7132F00718D1A /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		418688621FCD8D6C003EABC9 /* CallToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallToolbar.swift; sourceTree = "<group>"; };
+		418688621FCD8D6C003EABC9 /* CallSettingsBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallSettingsBar.swift; sourceTree = "<group>"; };
 		418688641FCD8D97003EABC9 /* Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
 		419DDCF01FD1899400B40239 /* ApiRTC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApiRTC.framework; path = Pods/ApiRTC/ApiRTC.framework; sourceTree = "<group>"; };
-		41B13BF81FB3BCD900BB40CA /* ControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlView.swift; sourceTree = "<group>"; };
+		41AC00791FE2D537002AB39B /* ActionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionsViewController.swift; sourceTree = "<group>"; };
+		41AC007B1FE2D7E5002AB39B /* ToolBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolBar.swift; sourceTree = "<group>"; };
+		41B13BF81FB3BCD900BB40CA /* CallBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallBar.swift; sourceTree = "<group>"; };
 		41B13BFA1FB3BF8A00BB40CA /* UsernameField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsernameField.swift; sourceTree = "<group>"; };
 		41C653461FE0015C00BAA3B2 /* iTunesArtwork@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iTunesArtwork@2x.png"; sourceTree = "<group>"; };
 		41C653471FE0015C00BAA3B2 /* iTunesArtwork@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iTunesArtwork@3x.png"; sourceTree = "<group>"; };
 		41C653481FE0015C00BAA3B2 /* iTunesArtwork@1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iTunesArtwork@1x.png"; sourceTree = "<group>"; };
+		41FA810D1FE411CE002B3D64 /* ApiRTC.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ApiRTC.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A26E416D0830DEAF32EB4099 /* Pods-ApiRTCApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ApiRTCApp.release.xcconfig"; path = "Pods/Target Support Files/Pods-ApiRTCApp/Pods-ApiRTCApp.release.xcconfig"; sourceTree = "<group>"; };
 		B4A05A040E7EF7052C9AAE85 /* Pods-ApiRTCApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ApiRTCApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ApiRTCApp/Pods-ApiRTCApp.debug.xcconfig"; sourceTree = "<group>"; };
 		CC0C2856DB73537FB6C0E31A9E6EE38D /* ApiRTC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ApiRTC.framework; sourceTree = "<group>"; };
@@ -74,7 +79,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				02CD79222724792737BD955E /* Pods_ApiRTCApp.framework in Frameworks */,
-				419DDCF11FD1899400B40239 /* ApiRTC.framework in Frameworks */,
+				41FA810E1FE411CE002B3D64 /* ApiRTC.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -109,6 +114,7 @@
 		417AE7C91FA70FC200718D1A = {
 			isa = PBXGroup;
 			children = (
+				41FA810D1FE411CE002B3D64 /* ApiRTC.framework */,
 				4166EE001FDAB5A900F57C6A /* README.md */,
 				419DDCF01FD1899400B40239 /* ApiRTC.framework */,
 				417AE7D41FA70FC200718D1A /* ApiRTCApp */,
@@ -155,6 +161,7 @@
 			isa = PBXGroup;
 			children = (
 				417AE7ED1FA7132F00718D1A /* Main */,
+				41AC00781FE2D519002AB39B /* Actions */,
 			);
 			path = Screens;
 			sourceTree = "<group>";
@@ -176,13 +183,22 @@
 			name = "Recovered References";
 			sourceTree = "<group>";
 		};
+		41AC00781FE2D519002AB39B /* Actions */ = {
+			isa = PBXGroup;
+			children = (
+				41AC00791FE2D537002AB39B /* ActionsViewController.swift */,
+			);
+			path = Actions;
+			sourceTree = "<group>";
+		};
 		41B13BF71FB3BCAE00BB40CA /* Views */ = {
 			isa = PBXGroup;
 			children = (
 				418688641FCD8D97003EABC9 /* Button.swift */,
-				41B13BF81FB3BCD900BB40CA /* ControlView.swift */,
+				41B13BF81FB3BCD900BB40CA /* CallBar.swift */,
+				418688621FCD8D6C003EABC9 /* CallSettingsBar.swift */,
+				41AC007B1FE2D7E5002AB39B /* ToolBar.swift */,
 				41B13BFA1FB3BF8A00BB40CA /* UsernameField.swift */,
-				418688621FCD8D6C003EABC9 /* CallToolbar.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -220,7 +236,7 @@
 				417AE7D01FA70FC200718D1A /* Resources */,
 				74417A8EDAAA9D5F04720493 /* [CP] Embed Pods Frameworks */,
 				8BD2E533556AEC0510C4F6A0 /* [CP] Copy Pods Resources */,
-				419DDCF31FD1899400B40239 /* Embed Frameworks */,
+				41FA81101FE411CF002B3D64 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -316,8 +332,8 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-ApiRTCApp/Pods-ApiRTCApp-frameworks.sh",
-				"${PODS_ROOT}/ApiRTC/ApiRTC.framework",
+				"${SRCROOT}/../ApiRTCDev/Pods/Target Support Files/Pods-ApiRTCApp/Pods-ApiRTCApp-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Eureka/Eureka.framework",
 				"${BUILT_PRODUCTS_DIR}/FontAwesome.swift/FontAwesome_swift.framework",
 				"${PODS_ROOT}/GoogleWebRTC/Frameworks/frameworks/WebRTC.framework",
 				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
@@ -326,7 +342,7 @@
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ApiRTC.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Eureka.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FontAwesome_swift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/WebRTC.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
@@ -335,7 +351,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ApiRTCApp/Pods-ApiRTCApp-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/../ApiRTCDev/Pods/Target Support Files/Pods-ApiRTCApp/Pods-ApiRTCApp-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		8BD2E533556AEC0510C4F6A0 /* [CP] Copy Pods Resources */ = {
@@ -350,7 +366,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ApiRTCApp/Pods-ApiRTCApp-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/../ApiRTCDev/Pods/Target Support Files/Pods-ApiRTCApp/Pods-ApiRTCApp-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -365,9 +381,11 @@
 				41B13BFB1FB3BF8A00BB40CA /* UsernameField.swift in Sources */,
 				418688651FCD8D97003EABC9 /* Button.swift in Sources */,
 				4119CFAF1FA8A2AC007A625F /* Config.swift in Sources */,
-				418688631FCD8D6C003EABC9 /* CallToolbar.swift in Sources */,
+				418688631FCD8D6C003EABC9 /* CallSettingsBar.swift in Sources */,
+				41AC007A1FE2D537002AB39B /* ActionsViewController.swift in Sources */,
 				4119CFB81FA8C70A007A625F /* Utils.swift in Sources */,
-				41B13BF91FB3BCD900BB40CA /* ControlView.swift in Sources */,
+				41B13BF91FB3BCD900BB40CA /* CallBar.swift in Sources */,
+				41AC007C1FE2D7E5002AB39B /* ToolBar.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

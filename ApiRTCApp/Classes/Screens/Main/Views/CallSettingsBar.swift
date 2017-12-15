@@ -1,5 +1,5 @@
 //
-//  CallToolbar.swift
+//  CallSettingsBar.swift
 //  ApiRTCApp
 //
 //  Created by Aleksandr Khorobrykh on 28/11/2017.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CallToolbar: UIView {
+class CallSettingsBar: UIView {
     
     static let height: Float = 50 * 3
     static let width: Float = 50

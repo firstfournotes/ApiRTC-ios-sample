@@ -31,12 +31,14 @@ class ActionsViewController: FormViewController {
                         ]
                     )
                 }
-            // FIXME:
             <<< ButtonRow() { row in
-                row.title = "Test"
+                row.title = "Log default group"
                 }
                 .onCellSelection { cell, row in
-                    //ApiRTC.session.getConnectedUserList()
+                    guard let group = ApiRTC.session.presenceGroups["default"] else {
+                        return
+                    }
+                    debugPrint(group)
                 }
     }
     

@@ -19,10 +19,9 @@ class ActionsViewController: FormViewController {
         
         form = Form()
         
-        // FIXME:
-        form +++ Section("Test actions")
+        form +++ Section("User test actions")
             <<< ButtonRow() { row in
-                    row.title = "setUserData"
+                    row.title = "Set test user data"
                 }
                 .onCellSelection { cell, row in
                     ApiRTC.session.setUserData([
@@ -31,15 +30,31 @@ class ActionsViewController: FormViewController {
                         ]
                     )
                 }
+        form +++ Section("Group test actions")
             <<< ButtonRow() { row in
-                row.title = "Log default group"
+                row.title = "Join default group"
                 }
                 .onCellSelection { cell, row in
-                    guard let group = ApiRTC.session.presenceGroups["default"] else {
-                        return
-                    }
-                    debugPrint(group)
+                    ApiRTC.session.joinGroup(groupNames: ["default"])
+            }
+            <<< ButtonRow() { row in
+                row.title = "Leave default group"
                 }
+                .onCellSelection { cell, row in
+                    ApiRTC.session.leaveGroup(groupNames: ["default"])
+            }
+            <<< ButtonRow() { row in
+                row.title = "Subscribe default group"
+                }
+                .onCellSelection { cell, row in
+                    ApiRTC.session.subscribeGroup(groupNames: ["default"])
+            }
+            <<< ButtonRow() { row in
+                row.title = "Unsubscribe default group"
+                }
+                .onCellSelection { cell, row in
+                    ApiRTC.session.unsubscribeGroup(groupNames: ["default"])
+            }
     }
     
     override func viewWillAppear(_ animated: Bool) {

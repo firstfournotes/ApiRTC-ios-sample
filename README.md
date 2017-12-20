@@ -1,4 +1,4 @@
-This repository contains a sample app using [ApiRTC iOS SDK](https://github.com/apizee/ApiRTC-ios).
+This repository contains the samples for [ApiRTC iOS SDK](https://github.com/apizee/ApiRTC-ios).
 
 To make it work:
 
@@ -8,7 +8,11 @@ cd ApiRTC-ios-sample/
 ```
 
 ```
+cd to_some_sample_directory
+```
+
+```
 pod update
 ```
 
-Then start `ApiRTCApp.xcworkspace`
+Then start `.xcworkspace`

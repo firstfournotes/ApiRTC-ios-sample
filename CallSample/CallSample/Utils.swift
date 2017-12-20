@@ -62,15 +62,15 @@ extension UIViewController {
     
     func showErrorAlert(message: String, okActionHandler: (() -> Void)? = nil) {
         
-        showAlert(title: "Error".loc(), message: message, okActionHandler: okActionHandler)
+        showAlert(title: "Error", message: message, okActionHandler: okActionHandler)
     }
     
     func showWarningAlert(message: String, okActionHandler: (() -> Void)? = nil) {
         
-        showAlert(title: "Warning".loc(), message: message, okActionHandler: okActionHandler)
+        showAlert(title: "Warning", message: message, okActionHandler: okActionHandler)
     }
     
-    func showAlert(title: String = "", message: String, okButtonTitle: String = "OK", cancelButtonTitle: String? = "Cancel".loc(), okActionHandler: (() -> Void)? = nil, cancelActionHandler: (() -> Void)? = nil) {
+    func showAlert(title: String = "", message: String, okButtonTitle: String = "OK", cancelButtonTitle: String? = "Cancel", okActionHandler: (() -> Void)? = nil, cancelActionHandler: (() -> Void)? = nil) {
         
         guard self.isViewLoaded, self.view.window != nil else { // controller is visible
             return

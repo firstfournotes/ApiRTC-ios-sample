@@ -25,7 +25,7 @@ class UsernameField: UITextField {
         self.font = UIFont.systemFont(ofSize: 24)
         self.textColor = .white
         self.backgroundColor = UIColor.white.withAlphaComponent(0.1)
-        self.placeholder = "Type username".loc()
+        self.placeholder = "Type username"
         self.textAlignment = .center
     }
 

@@ -158,7 +158,6 @@ class ViewController: FormViewController {
         
         ApiRTC.initialize(apiKey: Config.apiKey)
         ApiRTC.setLog([.error, .warning, .info])
-        
         ApiRTC.session.onEvent { (event) in
             switch event {
             case .initialized:
@@ -176,11 +175,11 @@ class ViewController: FormViewController {
                     print("Error: \(error)")
                 }
                 
-            case .contactListUpdated(let presenceGroup, let diff):
+            case .contactListUpdated(let presenceGroup, let groupUpdate):
 
                 var str = "---Contact list updated---\n"
 
-                switch diff.type {
+                switch groupUpdate.type {
                 case .join:
                     str += "Join"
                 case .left:
@@ -191,7 +190,7 @@ class ViewController: FormViewController {
                 
                 str += "\nGroup: " + presenceGroup.name
                 
-                for contact in diff.contacts {
+                for contact in groupUpdate.contacts {
                     str += "\nContact: " + contact.id
                 }
                 

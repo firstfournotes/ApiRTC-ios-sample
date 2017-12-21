@@ -10,6 +10,7 @@ import UIKit
 import SnapKit
 import Eureka
 import ApiRTC
+import SwiftyDrop
 
 class ViewController: FormViewController {
 
@@ -20,20 +21,46 @@ class ViewController: FormViewController {
         
         form = Form()
         
-        form +++ Section("Test actions")
+        form +++ Section("Info actions")
             <<< ButtonRow() { row in
-                row.title = "Get default group connected contacts"
+                    row.title = "Get actual groups"
+                }
+                .onCellSelection { cell, row in
+                    var str = "Actual groups:"
+                    for (key, value) in ApiRTC.session.presenceGroups {
+                        str += "\n" + key + " (\(value.state))"
+                    }
+                    print(str)
+                    Drop.down(str)
+                }
+            <<< ButtonRow() { row in
+                    row.title = "Get default group contacts"
                 }
                 .onCellSelection { cell, row in
                     if let contacts = ApiRTC.session.presenceGroups["default"]?.contacts {
-                        print("---Connected contacts---")
+                        var str = "Connected contacts: "
                         for contact in contacts {
-                            print("Contact: \(contact.id)")
-                            print(contact.data ?? "")
+                            str += contact.id + " "
                         }
+                        print(str)
+                        Drop.down(str)
                     }
-        }
-        form +++ Section("User test actions")
+                }
+            <<< ButtonRow() { row in
+                    row.title = "Get custom group contacts"
+                }
+                .onCellSelection { cell, row in
+                    if let contacts = ApiRTC.session.presenceGroups["custom"]?.contacts {
+                        var str = "Connected contacts: "
+                        for contact in contacts {
+                            str += contact.id + " "
+                        }
+                        print(str)
+                        Drop.down(str)
+                    }
+                }
+        
+        form +++ Section("User actions")
             <<< ButtonRow() { row in
                 row.title = "Set test user data"
                 }
@@ -43,56 +70,57 @@ class ViewController: FormViewController {
                         "testUserData2": "testUserData2"
                         ]
                     )
-        }
-        form +++ Section("Group test actions")
+                }
+        form +++ Section("Default group actions")
             <<< ButtonRow() { row in
                 row.title = "Join default group"
                 }
                 .onCellSelection { cell, row in
-                    ApiRTC.session.joinGroup(groupNames: ["default"])
+                    ApiRTC.session.joinGroup("default")
                 }
             <<< ButtonRow() { row in
                 row.title = "Leave default group"
                 }
                 .onCellSelection { cell, row in
-                    ApiRTC.session.leaveGroup(groupNames: ["default"])
+                    ApiRTC.session.leaveGroup("default")
                 }
             <<< ButtonRow() { row in
                 row.title = "Subscribe default group"
                 }
                 .onCellSelection { cell, row in
-                    ApiRTC.session.subscribeGroup(groupNames: ["default"])
+                    ApiRTC.session.subscribeGroup("default")
                 }
             <<< ButtonRow() { row in
                 row.title = "Unsubscribe default group"
                 }
                 .onCellSelection { cell, row in
-                    ApiRTC.session.unsubscribeGroup(groupNames: ["default"])
+                    ApiRTC.session.unsubscribeGroup("default")
                 }
+        form +++ Section("Custom group actions")
             <<< ButtonRow() { row in
                 row.title = "Join custom group"
                 }
                 .onCellSelection { cell, row in
-                    ApiRTC.session.joinGroup(groupNames: ["custom"])
+                    ApiRTC.session.joinGroup("custom")
                 }
         
             <<< ButtonRow() { row in
                 row.title = "Leave custom group"
                 }
                 .onCellSelection { cell, row in
-                    ApiRTC.session.leaveGroup(groupNames: ["custom"])
+                    ApiRTC.session.leaveGroup("custom")
                 }
             <<< ButtonRow() { row in
                 row.title = "Subscribe custom group"
                 }
                 .onCellSelection { cell, row in
-                    ApiRTC.session.subscribeGroup(groupNames: ["custom"])
+                    ApiRTC.session.subscribeGroup("custom")
             }
             <<< ButtonRow() { row in
                 row.title = "Unsubscribe custom group"
                 }
                 .onCellSelection { cell, row in
-                    ApiRTC.session.unsubscribeGroup(groupNames: ["custom"])
+                    ApiRTC.session.unsubscribeGroup("custom")
             }
 
         // Misc
@@ -148,30 +176,28 @@ class ViewController: FormViewController {
                     print("Error: \(error)")
                 }
                 
-            case .contactListUpdated(let joinedGroup, let leftGroup, let changedContacts):
-                if let group = joinedGroup {
-                    print("---Join---")
-                    print("Group " + group.name)
-                    for contact in group.contacts {
-                        print("Contact: \(contact.id)")
-                        print(contact.data ?? "")
-                    }
+            case .contactListUpdated(let presenceGroup, let diff):
+
+                var str = "---Contact list updated---\n"
+
+                switch diff.type {
+                case .join:
+                    str += "Join"
+                case .left:
+                    str += "Left"
+                case .userDataChange:
+                    str += "Change"
                 }
-                if let group = leftGroup {
-                    print("---Left---")
-                    print("Group " + group.name)
-                    for contact in group.contacts {
-                        print("Contact: " + contact.id)
-                        print(contact.data ?? "")
-                    }
+                
+                str += "\nGroup: " + presenceGroup.name
+                
+                for contact in diff.contacts {
+                    str += "\nContact: " + contact.id
                 }
-                if let contacts = changedContacts {
-                    print("---Changed---")
-                    for contact in contacts {
-                        print("Contact: " + contact.id)
-                        print(contact.data ?? "")
-                    }
-                }
+                
+                print(str)
+                Drop.down(str)
+                
             default:
                 break
             }

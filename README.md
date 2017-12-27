@@ -8,7 +8,7 @@ cd ApiRTC-ios-sample/
 ```
 
 ```
-cd to_some_sample_directory
+cd to_sample_directory
 ```
 
 ```

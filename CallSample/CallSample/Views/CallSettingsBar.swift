@@ -10,12 +10,13 @@ import UIKit
 
 class CallSettingsBar: UIView {
     
-    static let height: Float = 50 * 3
+    static let height: Float = 50 * 4
     static let width: Float = 50
 
     var switchCameraButton: Button!
     var switchAudioButton: Button!
     var switchVideoButton: Button!
+    var takeSnapshotButton: Button!
     
     init() {
         super.init(frame: .zero)
@@ -58,6 +59,18 @@ class CallSettingsBar: UIView {
             make.left.right.equalTo(0)
             make.height.equalTo(type(of: self).width)
             make.bottom.equalTo(switchAudioButton.snp.top).offset(-1)
+        }
+        
+        takeSnapshotButton = Button(
+            image: UIImage.fontAwesomeIcon(name: .pictureO, textColor: .white, size: CGSize(width: 30, height: 30)),
+            bgColor: UIColor.white.withAlphaComponent(0.1)
+        )
+        takeSnapshotButton.tintColor = .white
+        self.addSubview(takeSnapshotButton)
+        takeSnapshotButton.snp.makeConstraints { (make) in
+            make.left.right.equalTo(0)
+            make.height.equalTo(type(of: self).width)
+            make.bottom.equalTo(switchVideoButton.snp.top).offset(-1)
         }
     }
     

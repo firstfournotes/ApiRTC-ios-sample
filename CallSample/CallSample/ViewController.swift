@@ -108,6 +108,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
             make.width.equalTo(CallSettingsBar.width)
             make.height.equalTo(CallSettingsBar.height)
         }
+        callSettingsBar.takeSnapshotButton.addTarget(self, action: #selector(tapTakeSnapshotButton(_:)), for: .touchUpInside)
         callSettingsBar.switchCameraButton.addTarget(self, action: #selector(tapSwitchCameraButton(_:)), for: .touchUpInside)
         callSettingsBar.switchAudioButton.addTarget(self, action: #selector(tapSwitchAudioButton(_:)), for: .touchUpInside)
         callSettingsBar.switchVideoButton.addTarget(self, action: #selector(tapSwitchVideoButton(_:)), for: .touchUpInside)
@@ -263,6 +264,15 @@ class ViewController: UIViewController, UITextFieldDelegate {
     }
     
     // MARK: CallSettingsBar actions
+    
+    @objc func tapTakeSnapshotButton(_ button: UIButton) {
+        
+        guard let image = remoteVideoView.takeSnapshot() else {
+            return
+        }
+        
+        UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+    }
     
     @objc func tapSwitchCameraButton(_ button: UIButton) {
         

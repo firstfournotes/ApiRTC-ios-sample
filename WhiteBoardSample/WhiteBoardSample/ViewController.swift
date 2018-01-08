@@ -16,20 +16,31 @@ class ViewController: FormViewController {
 
     var stateLabel, userIdLabel: UILabel!
     
-    var whiteBoard: Whiteboard?
+    var whiteboard: Whiteboard?
+    var presenceGroup: PresenceGroup?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         form = Form()
         
-        form +++ Section("Test")
+        form +++ Section("")
             <<< ButtonRow() { row in
                     row.title = "Create whiteboard"
                 }
                 .onCellSelection { cell, row in
-                    self.createWhiteBoard()
+                    self.createWhiteboard()
                 }
+            <<< ButtonRow() { row in
+                    row.title = "Refresh contacts"
+                }
+                .onCellSelection { cell, row in
+                    self.updateInviteRow()
+                }
+            +++ Section("Contacts (tap to invite)") {
+                    $0.tag = "contacts"
+            }
+        
         // Misc
         userIdLabel = UILabel()
         userIdLabel.font = UIFont.systemFont(ofSize: 12, weight: .light)
@@ -81,6 +92,13 @@ class ViewController: FormViewController {
                     self.stateLabel.text = "error"
                     print("Error: \(error)")
                 }
+            case .contactListUpdated(let presenceGroup, _):
+                self.presenceGroup = presenceGroup
+                DispatchQueue.main.async {
+                    self.updateInviteRow()
+                }
+            case .newWhiteboard(let whiteboard):
+                self.handleNewWhiteboard(whiteboard)
             default:
                 break
             }
@@ -89,15 +107,50 @@ class ViewController: FormViewController {
         ApiRTC.session.connect()
     }
     
-    func createWhiteBoard() {
-        whiteBoard = ApiRTC.session.createWhiteBoard()
-        whiteBoard!.onEvent { event in
-            switch event {
-            case .roomCreated(let room):
-                print("lol")
-                print(room)
-            }
+    func createWhiteboard() {
+        ApiRTC.session.startNewWhiteboard()
+    }
+    
+    func handleNewWhiteboard(_ whiteboard: Whiteboard) {
+        self.whiteboard = whiteboard
+    }
+    
+    func updateInviteRow() {
+
+        guard let presenceGroup = presenceGroup else {
+            return
         }
-        whiteBoard?.createRoom()
+        
+        let section = form.sectionBy(tag: "contacts")
+        section?.removeAll()
+        
+        var str = "Connected contacts: "
+        
+        for contact in presenceGroup.contacts {
+            str += contact.id + " "
+            
+            let row = ButtonRow()
+            row.title = contact.id
+            row.onCellSelection({ (cell, row) in
+                self.invite(contactId: contact.id)
+            })
+            section?.append(row)
+        }
+        
+        print(str)
+        section?.reload()
+    }
+    
+    func invite(contactId: String) {
+        
+        guard let presenceGroup = presenceGroup else {
+            return
+        }
+        
+        guard let contact = presenceGroup.contact(withId: contactId) else {
+            return
+        }
+        
+        whiteboard?.invite(contact)
     }
 }

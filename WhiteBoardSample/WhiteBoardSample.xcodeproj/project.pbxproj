@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		08C425E6EB859087D6A2503F /* Pods_WhiteBoardSample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9528E620823443EEE60750EA /* Pods_WhiteBoardSample.framework */; };
+		4156D1D52003B65B008B9D8C /* ApiRTC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4156D1D42003B65B008B9D8C /* ApiRTC.framework */; };
+		4156D1D62003B65B008B9D8C /* ApiRTC.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4156D1D42003B65B008B9D8C /* ApiRTC.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		41BAD0821FFE3810004EC1CD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41BAD0811FFE3810004EC1CD /* AppDelegate.swift */; };
 		41BAD0841FFE3810004EC1CD /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41BAD0831FFE3810004EC1CD /* ViewController.swift */; };
 		41BAD0871FFE3810004EC1CD /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 41BAD0851FFE3810004EC1CD /* Main.storyboard */; };
@@ -16,7 +18,22 @@
 		41BAD0AA1FFF962F004EC1CD /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41BAD0A91FFF962F004EC1CD /* Config.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		4156D1D72003B65C008B9D8C /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				4156D1D62003B65B008B9D8C /* ApiRTC.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		4156D1D42003B65B008B9D8C /* ApiRTC.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ApiRTC.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		41BAD07E1FFE3810004EC1CD /* WhiteBoardSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WhiteBoardSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		41BAD0811FFE3810004EC1CD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		41BAD0831FFE3810004EC1CD /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -36,6 +53,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				08C425E6EB859087D6A2503F /* Pods_WhiteBoardSample.framework in Frameworks */,
+				4156D1D52003B65B008B9D8C /* ApiRTC.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -54,6 +72,7 @@
 		41BAD0751FFE3810004EC1CD = {
 			isa = PBXGroup;
 			children = (
+				4156D1D42003B65B008B9D8C /* ApiRTC.framework */,
 				41BAD0801FFE3810004EC1CD /* WhiteBoardSample */,
 				41BAD07F1FFE3810004EC1CD /* Products */,
 				28353CA1EF4D7B2C29333FEB /* Pods */,
@@ -104,6 +123,7 @@
 				41BAD07C1FFE3810004EC1CD /* Resources */,
 				3C40D865D529F3140745BB38 /* [CP] Embed Pods Frameworks */,
 				ED5B9000EB6C7DDF358D6984 /* [CP] Copy Pods Resources */,
+				4156D1D72003B65C008B9D8C /* Embed Frameworks */,
 			);
 			buildRules = (
 			);

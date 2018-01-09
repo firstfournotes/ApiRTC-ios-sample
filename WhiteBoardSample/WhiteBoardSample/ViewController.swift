@@ -19,12 +19,16 @@ class ViewController: FormViewController {
     var whiteboard: Whiteboard?
     var presenceGroup: PresenceGroup?
     
+    var contactsSection = Section("Contacts (tap to invite)")
+    var toolsSection = Section()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         form = Form()
         
-        form +++ Section("")
+        
+        form +++ toolsSection
             <<< ButtonRow() { row in
                     row.title = "Create whiteboard"
                 }
@@ -32,14 +36,20 @@ class ViewController: FormViewController {
                     self.createWhiteboard()
                 }
             <<< ButtonRow() { row in
+                    row.title = "Join whiteboard"
+                    row.tag = "joinButton"
+                    row.disabled = true
+                }
+                .onCellSelection { cell, row in
+                    self.joinWhiteboard()
+                }
+            <<< ButtonRow() { row in
                     row.title = "Refresh contacts"
                 }
                 .onCellSelection { cell, row in
                     self.updateInviteRow()
                 }
-            +++ Section("Contacts (tap to invite)") {
-                    $0.tag = "contacts"
-            }
+            +++ contactsSection
         
         // Misc
         userIdLabel = UILabel()
@@ -113,6 +123,20 @@ class ViewController: FormViewController {
     
     func handleNewWhiteboard(_ whiteboard: Whiteboard) {
         self.whiteboard = whiteboard
+        
+        if !whiteboard.isOwned {
+            DispatchQueue.main.async {
+                if let row = self.form.rowBy(tag: "joinButton") as? ButtonRow {
+                    row.disabled = false
+                    row.evaluateDisabled()
+                    row.reload()
+                }
+            }
+        }
+    }
+    
+    func joinWhiteboard() {
+        whiteboard?.join()
     }
     
     func updateInviteRow() {
@@ -121,8 +145,7 @@ class ViewController: FormViewController {
             return
         }
         
-        let section = form.sectionBy(tag: "contacts")
-        section?.removeAll()
+        contactsSection.removeAll()
         
         var str = "Connected contacts: "
         
@@ -134,11 +157,11 @@ class ViewController: FormViewController {
             row.onCellSelection({ (cell, row) in
                 self.invite(contactId: contact.id)
             })
-            section?.append(row)
+            contactsSection.append(row)
         }
         
         print(str)
-        section?.reload()
+        contactsSection.reload()
     }
     
     func invite(contactId: String) {
@@ -150,7 +173,7 @@ class ViewController: FormViewController {
         guard let contact = presenceGroup.contact(withId: contactId) else {
             return
         }
-        
+                
         whiteboard?.invite(contact)
     }
 }

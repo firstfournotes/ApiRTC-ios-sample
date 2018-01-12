@@ -10,46 +10,76 @@ import UIKit
 import ApiRTC
 import Eureka
 import SnapKit
-//import SwiftyDrop
+import SwiftyDrop
 
 class ViewController: FormViewController {
 
     var stateLabel, userIdLabel: UILabel!
     
     var whiteboard: Whiteboard?
+    
     var presenceGroup: PresenceGroup?
     
     var contactsSection = Section("Contacts (tap to invite)")
     var toolsSection = Section()
+    
+    var createButton: ButtonRow!
+    var joinButton: ButtonRow!
+    var leaveButton: ButtonRow!
+    var whiteboardUsersButton: ButtonRow!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         form = Form()
         
+        createButton = ButtonRow() { row in
+                row.title = "Create whiteboard"
+            }
+            .onCellSelection { cell, row in
+                self.createWhiteboard()
+            }
+        joinButton = ButtonRow() { row in
+                row.title = "Join whiteboard"
+                row.disabled = true
+            }
+            .onCellSelection { cell, row in
+                self.joinWhiteboard()
+            }
+        leaveButton = ButtonRow() { row in
+                row.title = "Leave whiteboard"
+                row.disabled = true
+            }
+            .onCellSelection { cell, row in
+                self.leaveWhiteboard()
+            }
+        whiteboardUsersButton = ButtonRow() { row in
+                row.title = "Whiteboard users"
+                row.disabled = true
+            }
+            .onCellSelection { cell, row in
+                self.showWhiteboardUsers()
+            }
         
         form +++ toolsSection
-            <<< ButtonRow() { row in
-                    row.title = "Create whiteboard"
-                }
-                .onCellSelection { cell, row in
-                    self.createWhiteboard()
-                }
-            <<< ButtonRow() { row in
-                    row.title = "Join whiteboard"
-                    row.tag = "joinButton"
-                    row.disabled = true
-                }
-                .onCellSelection { cell, row in
-                    self.joinWhiteboard()
-                }
+            <<< createButton
+            <<< joinButton
+            <<< leaveButton
+            <<< whiteboardUsersButton
             <<< ButtonRow() { row in
                     row.title = "Refresh contacts"
                 }
                 .onCellSelection { cell, row in
-                    self.updateInviteRow()
+                    self.refreshContacts()
                 }
             +++ contactsSection
+            +++ Section("tmp")
+                <<< ButtonRow() { row in
+                        row.title = "Send message"
+                    }
+                    .onCellSelection { cell, row in
+                        self.sendMessage()
+                    }
         
         // Misc
         userIdLabel = UILabel()
@@ -105,7 +135,7 @@ class ViewController: FormViewController {
             case .contactListUpdated(let presenceGroup, _):
                 self.presenceGroup = presenceGroup
                 DispatchQueue.main.async {
-                    self.updateInviteRow()
+                    self.refreshContacts()
                 }
             case .newWhiteboard(let whiteboard):
                 self.handleNewWhiteboard(whiteboard)
@@ -124,14 +154,42 @@ class ViewController: FormViewController {
     func handleNewWhiteboard(_ whiteboard: Whiteboard) {
         self.whiteboard = whiteboard
         
-        if !whiteboard.isOwned {
-            DispatchQueue.main.async {
-                if let row = self.form.rowBy(tag: "joinButton") as? ButtonRow {
-                    row.disabled = false
-                    row.evaluateDisabled()
-                    row.reload()
+        whiteboard.room.onEvent { event in
+            
+            var str = "---Room updated---"
+            switch event {
+            case .updated(let roomUpdate):
+                switch roomUpdate.type {
+                case .join:
+                    str += "\nJoin"
+                case .left:
+                    str += "\nLeft"
+                }
+                for contact in roomUpdate.contacts {
+                    str += "\nContact: " + contact.id
                 }
             }
+            
+            print(str)
+            Drop.down(str)
+        }
+        
+        DispatchQueue.main.async {
+            if !whiteboard.room.isOwned {
+                self.joinButton.disabled = false
+                self.joinButton.evaluateDisabled()
+                self.joinButton.reload()
+            }
+            
+            self.leaveButton.disabled = false
+            self.leaveButton.evaluateDisabled()
+            self.leaveButton.reload()
+
+            self.whiteboardUsersButton.disabled = false
+            self.whiteboardUsersButton.evaluateDisabled()
+            self.whiteboardUsersButton.reload()
+            
+            Drop.down("New whiteboard, roomId: \(whiteboard.room.id)")
         }
     }
     
@@ -139,7 +197,48 @@ class ViewController: FormViewController {
         whiteboard?.join()
     }
     
-    func updateInviteRow() {
+    func leaveWhiteboard() {
+        whiteboard?.leave()
+        whiteboard = nil
+        
+        joinButton.disabled = true
+        joinButton.evaluateDisabled()
+        joinButton.reload()
+        
+        leaveButton.disabled = true
+        leaveButton.evaluateDisabled()
+        leaveButton.reload()
+        
+        whiteboardUsersButton.disabled = true
+        whiteboardUsersButton.evaluateDisabled()
+        whiteboardUsersButton.reload()
+    }
+    
+    func invite(contactId: String) {
+        
+        guard let presenceGroup = presenceGroup else {
+            return
+        }
+        
+        guard let contact = presenceGroup.contact(withId: contactId) else {
+            return
+        }
+        
+        whiteboard?.invite(contact)
+    }
+    
+    func showWhiteboardUsers() {
+        guard let whiteboard = whiteboard else {
+            return
+        }
+        var str = "---Whiteboard users---"
+        for contact in whiteboard.room.contacts {
+            str += "\nContact: " + contact.id
+        }
+        Drop.down(str)
+    }
+    
+    func refreshContacts() {
 
         guard let presenceGroup = presenceGroup else {
             return
@@ -150,6 +249,10 @@ class ViewController: FormViewController {
         var str = "Connected contacts: "
         
         for contact in presenceGroup.contacts {
+            if contact.id == ApiRTC.session.user.id {
+                continue
+            }
+            
             str += contact.id + " "
             
             let row = ButtonRow()
@@ -164,16 +267,8 @@ class ViewController: FormViewController {
         contactsSection.reload()
     }
     
-    func invite(contactId: String) {
-        
-        guard let presenceGroup = presenceGroup else {
-            return
-        }
-        
-        guard let contact = presenceGroup.contact(withId: contactId) else {
-            return
-        }
-                
-        whiteboard?.invite(contact)
+    func sendMessage() {
+        let update = WhiteboardUpdate()
+        whiteboard?.update(update)
     }
 }

@@ -12,6 +12,12 @@ import Eureka
 import SnapKit
 import SwiftyDrop
 
+enum WhiteboardMemeberState {
+    case offline
+    case invited
+    case member
+}
+
 class ViewController: FormViewController {
 
     var stateLabel, userIdLabel: UILabel!
@@ -28,6 +34,14 @@ class ViewController: FormViewController {
     var leaveButton: ButtonRow!
     var whiteboardUsersButton: ButtonRow!
     
+    var whiteboardMemberState: WhiteboardMemeberState! {
+        didSet {
+            DispatchQueue.main.async {
+                self.update(self.whiteboardMemberState)
+            }
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -41,21 +55,18 @@ class ViewController: FormViewController {
             }
         joinButton = ButtonRow() { row in
                 row.title = "Join whiteboard"
-                row.disabled = true
             }
             .onCellSelection { cell, row in
                 self.joinWhiteboard()
             }
         leaveButton = ButtonRow() { row in
                 row.title = "Leave whiteboard"
-                row.disabled = true
             }
             .onCellSelection { cell, row in
                 self.leaveWhiteboard()
             }
         whiteboardUsersButton = ButtonRow() { row in
                 row.title = "Whiteboard users"
-                row.disabled = true
             }
             .onCellSelection { cell, row in
                 self.showWhiteboardUsers()
@@ -104,6 +115,8 @@ class ViewController: FormViewController {
             make.top.equalTo(0)
             make.right.equalTo(-5)
         }
+        
+        whiteboardMemberState = .offline
         
         initializeSDK()
     }
@@ -170,51 +183,44 @@ class ViewController: FormViewController {
                 }
             }
             
+            if whiteboard.room.hasContact(withId: ApiRTC.session.user.id) {
+                self.whiteboardMemberState = .member
+            }
+
             print(str)
             Drop.down(str)
         }
         
-        DispatchQueue.main.async {
-            if !whiteboard.room.isOwned {
-                self.joinButton.disabled = false
-                self.joinButton.evaluateDisabled()
-                self.joinButton.reload()
+        whiteboard.onEvent { event in
+            switch event {
+            case .updated(let update):
+                self.handle(whiteboardUpdate: update)
             }
-            
-            self.leaveButton.disabled = false
-            self.leaveButton.evaluateDisabled()
-            self.leaveButton.reload()
-
-            self.whiteboardUsersButton.disabled = false
-            self.whiteboardUsersButton.evaluateDisabled()
-            self.whiteboardUsersButton.reload()
-            
+        }
+        
+        whiteboardMemberState = whiteboard.room.isOwned ? .member : .invited
+        DispatchQueue.main.async {
             Drop.down("New whiteboard, roomId: \(whiteboard.room.id)")
         }
     }
     
     func joinWhiteboard() {
-        whiteboard?.join()
+        whiteboard?.room.join()
     }
     
     func leaveWhiteboard() {
-        whiteboard?.leave()
+        whiteboard?.room.leave()
         whiteboard = nil
         
-        joinButton.disabled = true
-        joinButton.evaluateDisabled()
-        joinButton.reload()
-        
-        leaveButton.disabled = true
-        leaveButton.evaluateDisabled()
-        leaveButton.reload()
-        
-        whiteboardUsersButton.disabled = true
-        whiteboardUsersButton.evaluateDisabled()
-        whiteboardUsersButton.reload()
+        whiteboardMemberState = .offline
     }
     
     func invite(contactId: String) {
+        
+        guard whiteboard != nil else {
+            showAlert(message: "Create whiteboard before sending invitation")
+            return
+        }
         
         guard let presenceGroup = presenceGroup else {
             return
@@ -224,7 +230,7 @@ class ViewController: FormViewController {
             return
         }
         
-        whiteboard?.invite(contact)
+        whiteboard?.room.invite(contact)
     }
     
     func showWhiteboardUsers() {
@@ -267,8 +273,70 @@ class ViewController: FormViewController {
         contactsSection.reload()
     }
     
+    func update(_ state: WhiteboardMemeberState) {
+        
+        switch state {
+        case .offline:
+            
+            createButton.disabled = false
+            createButton.evaluateDisabled()
+            createButton.reload()
+            
+            joinButton.disabled = true
+            joinButton.evaluateDisabled()
+            joinButton.reload()
+            
+            leaveButton.disabled = true
+            leaveButton.evaluateDisabled()
+            leaveButton.reload()
+            
+            whiteboardUsersButton.disabled = true
+            whiteboardUsersButton.evaluateDisabled()
+            whiteboardUsersButton.reload()
+            
+        case .invited:
+            
+            joinButton.disabled = false
+            joinButton.evaluateDisabled()
+            joinButton.reload()
+            
+            leaveButton.disabled = true
+            leaveButton.evaluateDisabled()
+            leaveButton.reload()
+            
+            whiteboardUsersButton.disabled = true
+            whiteboardUsersButton.evaluateDisabled()
+            whiteboardUsersButton.reload()
+        
+        case .member:
+        
+            createButton.disabled = true
+            createButton.evaluateDisabled()
+            createButton.reload()
+            
+            joinButton.disabled = true
+            joinButton.evaluateDisabled()
+            joinButton.reload()
+            
+            leaveButton.disabled = false
+            leaveButton.evaluateDisabled()
+            leaveButton.reload()
+            
+            whiteboardUsersButton.disabled = false
+            whiteboardUsersButton.evaluateDisabled()
+            whiteboardUsersButton.reload()
+        }
+    }
+    
     func sendMessage() {
-        let update = WhiteboardUpdate()
+        let de1 = DrawElement(id: 1, undoIndex: 1, fromX: 0, fromY: 0, toX: 1.1, toY: 1.2)
+        let de2 = DrawElement(id: 2, undoIndex: 1, fromX: 1, fromY: 0, toX: 1.1, toY: 1.2)
+        let update = WhiteboardUpdate(drawElements: [de1, de2])
         whiteboard?.update(update)
+    }
+    
+    func handle(whiteboardUpdate: WhiteboardUpdate) {
+        print("***")
+        print("update")
     }
 }

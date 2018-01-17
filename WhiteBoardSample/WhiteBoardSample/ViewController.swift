@@ -33,6 +33,7 @@ class ViewController: FormViewController {
     var joinButton: ButtonRow!
     var leaveButton: ButtonRow!
     var whiteboardUsersButton: ButtonRow!
+    var openWhiteboardButton: ButtonRow!
     
     var whiteboardMemberState: WhiteboardMemeberState! {
         didSet {
@@ -41,6 +42,8 @@ class ViewController: FormViewController {
             }
         }
     }
+    
+    var whiteboardViewController = WhiteboardViewController()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -72,25 +75,28 @@ class ViewController: FormViewController {
                 self.showWhiteboardUsers()
             }
         
-        form +++ toolsSection
-            <<< createButton
-            <<< joinButton
-            <<< leaveButton
-            <<< whiteboardUsersButton
-            <<< ButtonRow() { row in
-                    row.title = "Refresh contacts"
-                }
-                .onCellSelection { cell, row in
-                    self.refreshContacts()
-                }
-            +++ contactsSection
-            +++ Section("tmp")
+        openWhiteboardButton = ButtonRow() { row in
+            row.title = "Open whiteboard"
+            }
+            .onCellSelection { cell, row in
+                self.openWhiteboard()
+            }
+        
+        form
+            +++ toolsSection
+                <<< createButton
+                <<< joinButton
+                <<< leaveButton
+                <<< whiteboardUsersButton
                 <<< ButtonRow() { row in
-                        row.title = "Send message"
+                        row.title = "Refresh contacts"
                     }
                     .onCellSelection { cell, row in
-                        self.sendMessage()
+                        self.refreshContacts()
                     }
+            +++ contactsSection
+            +++ Section()
+                <<< openWhiteboardButton
         
         // Misc
         userIdLabel = UILabel()
@@ -194,7 +200,7 @@ class ViewController: FormViewController {
         whiteboard.onEvent { event in
             switch event {
             case .updated(let update):
-                self.handle(whiteboardUpdate: update)
+                self.handleWhiteboardUpdate(update)
             }
         }
         
@@ -205,11 +211,11 @@ class ViewController: FormViewController {
     }
     
     func joinWhiteboard() {
-        whiteboard?.room.join()
+        whiteboard?.join()
     }
     
     func leaveWhiteboard() {
-        whiteboard?.room.leave()
+        whiteboard?.leave()
         whiteboard = nil
         
         whiteboardMemberState = .offline
@@ -230,7 +236,7 @@ class ViewController: FormViewController {
             return
         }
         
-        whiteboard?.room.invite(contact)
+        whiteboard?.invite(contact)
     }
     
     func showWhiteboardUsers() {
@@ -277,54 +283,28 @@ class ViewController: FormViewController {
         
         switch state {
         case .offline:
-            
-            createButton.disabled = false
-            createButton.evaluateDisabled()
-            createButton.reload()
-            
-            joinButton.disabled = true
-            joinButton.evaluateDisabled()
-            joinButton.reload()
-            
-            leaveButton.disabled = true
-            leaveButton.evaluateDisabled()
-            leaveButton.reload()
-            
-            whiteboardUsersButton.disabled = true
-            whiteboardUsersButton.evaluateDisabled()
-            whiteboardUsersButton.reload()
+
+            createButton.enable()
+            joinButton.disable()
+            leaveButton.disable()
+            whiteboardUsersButton.disable()
+            //openWhiteboardButton.disable() // FIXME:
             
         case .invited:
-            
-            joinButton.disabled = false
-            joinButton.evaluateDisabled()
-            joinButton.reload()
-            
-            leaveButton.disabled = true
-            leaveButton.evaluateDisabled()
-            leaveButton.reload()
-            
-            whiteboardUsersButton.disabled = true
-            whiteboardUsersButton.evaluateDisabled()
-            whiteboardUsersButton.reload()
+          
+            createButton.enable()
+            joinButton.enable()
+            leaveButton.disable()
+            whiteboardUsersButton.disable()
+            //openWhiteboardButton.disable()
         
         case .member:
-        
-            createButton.disabled = true
-            createButton.evaluateDisabled()
-            createButton.reload()
             
-            joinButton.disabled = true
-            joinButton.evaluateDisabled()
-            joinButton.reload()
-            
-            leaveButton.disabled = false
-            leaveButton.evaluateDisabled()
-            leaveButton.reload()
-            
-            whiteboardUsersButton.disabled = false
-            whiteboardUsersButton.evaluateDisabled()
-            whiteboardUsersButton.reload()
+            createButton.disable()
+            joinButton.disable()
+            leaveButton.enable()
+            whiteboardUsersButton.enable()
+            //openWhiteboardButton.enable()
         }
     }
     
@@ -335,8 +315,25 @@ class ViewController: FormViewController {
         whiteboard?.update(update)
     }
     
-    func handle(whiteboardUpdate: WhiteboardUpdate) {
-        print("***")
-        print("update")
+    func openWhiteboard() {
+        self.present(whiteboardViewController, animated: true, completion: nil)
+    }
+    
+    func handleWhiteboardUpdate(_ update: WhiteboardUpdate) {
+        whiteboardViewController.update(update)
+    }
+}
+
+extension Row {
+    func enable() {
+        disabled = false
+        evaluateDisabled()
+        reload()
+    }
+
+    func disable() {
+        disabled = true
+        evaluateDisabled()
+        reload()
     }
 }

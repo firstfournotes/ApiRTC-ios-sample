@@ -17,6 +17,8 @@
 		41BAD0891FFE3810004EC1CD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 41BAD0881FFE3810004EC1CD /* Assets.xcassets */; };
 		41BAD08C1FFE3810004EC1CD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 41BAD08A1FFE3810004EC1CD /* LaunchScreen.storyboard */; };
 		41BAD0AA1FFF962F004EC1CD /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41BAD0A91FFF962F004EC1CD /* Config.swift */; };
+		41E1F41E200E1495005AB4C0 /* WhiteboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41E1F41D200E1495005AB4C0 /* WhiteboardViewController.swift */; };
+		41E1F420200E383A005AB4C0 /* WhiteboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41E1F41F200E383A005AB4C0 /* WhiteboardView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -44,6 +46,8 @@
 		41BAD08B1FFE3810004EC1CD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		41BAD08D1FFE3810004EC1CD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		41BAD0A91FFF962F004EC1CD /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
+		41E1F41D200E1495005AB4C0 /* WhiteboardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhiteboardViewController.swift; sourceTree = "<group>"; };
+		41E1F41F200E383A005AB4C0 /* WhiteboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhiteboardView.swift; sourceTree = "<group>"; };
 		92E21BBC06A4A7625014729F /* Pods-WhiteBoardSample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WhiteBoardSample.debug.xcconfig"; path = "Pods/Target Support Files/Pods-WhiteBoardSample/Pods-WhiteBoardSample.debug.xcconfig"; sourceTree = "<group>"; };
 		9528E620823443EEE60750EA /* Pods_WhiteBoardSample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WhiteBoardSample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EE1C7F5E0CD120C5D947B3F6 /* Pods-WhiteBoardSample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WhiteBoardSample.release.xcconfig"; path = "Pods/Target Support Files/Pods-WhiteBoardSample/Pods-WhiteBoardSample.release.xcconfig"; sourceTree = "<group>"; };
@@ -96,6 +100,8 @@
 				41BAD0811FFE3810004EC1CD /* AppDelegate.swift */,
 				41BAD0A91FFF962F004EC1CD /* Config.swift */,
 				41BAD0831FFE3810004EC1CD /* ViewController.swift */,
+				41E1F41D200E1495005AB4C0 /* WhiteboardViewController.swift */,
+				41E1F41F200E383A005AB4C0 /* WhiteboardView.swift */,
 				411DB131200CE2EB009BB689 /* Utils.swift */,
 				41BAD0851FFE3810004EC1CD /* Main.storyboard */,
 				41BAD0881FFE3810004EC1CD /* Assets.xcassets */,
@@ -257,6 +263,8 @@
 				41BAD0821FFE3810004EC1CD /* AppDelegate.swift in Sources */,
 				41BAD0AA1FFF962F004EC1CD /* Config.swift in Sources */,
 				411DB132200CE2EB009BB689 /* Utils.swift in Sources */,
+				41E1F41E200E1495005AB4C0 /* WhiteboardViewController.swift in Sources */,
+				41E1F420200E383A005AB4C0 /* WhiteboardView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

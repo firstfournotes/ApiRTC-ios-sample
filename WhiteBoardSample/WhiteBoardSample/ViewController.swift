@@ -43,7 +43,7 @@ class ViewController: FormViewController {
         }
     }
     
-    var whiteboardViewController = WhiteboardViewController()
+    var whiteboardViewController: WhiteboardViewController?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -197,10 +197,9 @@ class ViewController: FormViewController {
             Drop.down(str)
         }
         
-        whiteboard.onEvent { event in
-            switch event {
-            case .updated(let update):
-                self.handleWhiteboardUpdate(update)
+        whiteboard.onUpdate { update in
+            DispatchQueue.main.async {
+                self.whiteboardViewController?.update(update)
             }
         }
         
@@ -308,19 +307,17 @@ class ViewController: FormViewController {
         }
     }
     
-    func sendMessage() {
-        let de1 = DrawElement(id: 1, undoIndex: 1, fromX: 0, fromY: 0, toX: 1.1, toY: 1.2)
-        let de2 = DrawElement(id: 2, undoIndex: 1, fromX: 1, fromY: 0, toX: 1.1, toY: 1.2)
-        let update = WhiteboardUpdate(drawElements: [de1, de2])
-        whiteboard?.update(update)
-    }
-    
     func openWhiteboard() {
-        self.present(whiteboardViewController, animated: true, completion: nil)
+        whiteboardViewController = WhiteboardViewController()
+        whiteboardViewController?.delegate = self
+        self.present(whiteboardViewController!, animated: true, completion: nil)
     }
+}
+
+extension ViewController: WhiteboardViewControllerDelegate {
     
-    func handleWhiteboardUpdate(_ update: WhiteboardUpdate) {
-        whiteboardViewController.update(update)
+    func whiteboardViewController(_ controller: WhiteboardViewController, didAddData data: WhiteboardData) {
+        whiteboard?.add(data)
     }
 }
 

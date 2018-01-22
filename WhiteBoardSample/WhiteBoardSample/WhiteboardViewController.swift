@@ -10,8 +10,14 @@ import UIKit
 import ApiRTC
 import SnapKit
 
+protocol WhiteboardViewControllerDelegate: class {
+    func whiteboardViewController(_ controller: WhiteboardViewController, didAddData data: WhiteboardData)
+}
+
 class WhiteboardViewController: UIViewController {
 
+    weak var delegate: WhiteboardViewControllerDelegate?
+    
     var whiteboardView: WhiteboardView!
     
     override func viewDidLoad() {
@@ -24,6 +30,10 @@ class WhiteboardViewController: UIViewController {
         self.view.addSubview(whiteboardView)
         whiteboardView.snp.makeConstraints { (make) in
             make.top.right.left.bottom.equalTo(0)
+        }
+        whiteboardView.onUpdate { drawElements in
+            let data = WhiteboardData(drawElements: drawElements)
+            self.delegate?.whiteboardViewController(self, didAddData: data)
         }
         
         let dismissButton = UIButton()
@@ -65,9 +75,13 @@ class WhiteboardViewController: UIViewController {
         return true
     }
     
-    func update(_ update: WhiteboardUpdate) {
-        
+    // MARK:
+    
+    func update(_ whiteboardData: WhiteboardData) {
+        whiteboardView.update(whiteboardData.drawElements)
     }
+    
+    // MARK:
     
     @objc func tapDismiss(_ button: UIButton) {
         self.dismiss(animated: true, completion: nil)

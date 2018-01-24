@@ -18,6 +18,7 @@ class WhiteboardViewController: UIViewController {
 
     weak var delegate: WhiteboardViewControllerDelegate?
     
+    var whiteboardScrollView: WhiteboardScrollView!
     var whiteboardView: WhiteboardView!
     
     override func viewDidLoad() {
@@ -25,29 +26,29 @@ class WhiteboardViewController: UIViewController {
         
         self.view.backgroundColor = .white
     
-        whiteboardView = WhiteboardView(size: CGSize(width: 1000, height: 1000))
+        whiteboardScrollView = WhiteboardScrollView(size: CGSize(width: 1000, height: 1000), insets: UIEdgeInsetsMake(10, 10, 10, 10))
+        whiteboardView = whiteboardScrollView.whiteboardView // FIXME:
         
-        self.view.addSubview(whiteboardView)
-        whiteboardView.snp.makeConstraints { (make) in
+        self.view.addSubview(whiteboardScrollView)
+        whiteboardScrollView.snp.makeConstraints { (make) in
             make.top.right.left.bottom.equalTo(0)
         }
-        whiteboardView.onUpdate { drawElements in
-            let data = WhiteboardData(drawElements: drawElements)
+        whiteboardScrollView.mode = .drawing
+        
+        whiteboardView.onUpdate { data in
             self.delegate?.whiteboardViewController(self, didAddData: data)
         }
         
-        let dismissButton = UIButton()
-        dismissButton.backgroundColor = .lightGray
-        dismissButton.setTitle("Close", for: .normal)
+        let dismissButton = Button(title: "Close")
         self.view.addSubview(dismissButton)
         dismissButton.snp.makeConstraints { (make) in
-            make.left.top.equalTo(10)
+            make.left.top.equalTo(5)
             make.width.equalTo(80)
             make.height.equalTo(30)
         }
         dismissButton.addTarget(self, action: #selector(tapDismiss(_:)), for: .touchUpInside)
         
-        let touchModeSegmentedControl = UISegmentedControl(items: ["Scroll", "Draw"])
+        let touchModeSegmentedControl = UISegmentedControl(items: ["Draw", "Scroll"])
         self.view.addSubview(touchModeSegmentedControl)
         touchModeSegmentedControl.snp.makeConstraints { (make) in
             make.left.equalTo(10)
@@ -58,17 +59,34 @@ class WhiteboardViewController: UIViewController {
         touchModeSegmentedControl.selectedSegmentIndex = 0
         touchModeSegmentedControl.addTarget(self, action: #selector(tapSegmentedControl(_:)), for: .valueChanged)
         
-        let undoButton = UIButton()
-        undoButton.backgroundColor = .lightGray
-        undoButton.setTitle("Undo", for: .normal)
+        let undoButton = Button(title: "Undo")
         self.view.addSubview(undoButton)
         undoButton.snp.makeConstraints { (make) in
-            make.right.bottom.equalTo(-10)
+            make.right.bottom.equalTo(-5)
             make.width.equalTo(80)
             make.height.equalTo(30)
         }
         undoButton.addTarget(self, action: #selector(tapUndo(_:)), for: .touchUpInside)
 
+        let redoButton = Button(title: "Redo")
+        self.view.addSubview(redoButton)
+        redoButton.snp.makeConstraints { (make) in
+            make.right.equalTo(-5)
+            make.bottom.equalTo(undoButton.snp.top).offset(-5)
+            make.width.equalTo(80)
+            make.height.equalTo(30)
+        }
+        redoButton.addTarget(self, action: #selector(tapRedo(_:)), for: .touchUpInside)
+        
+        let newSheetButton = Button(title: "New Sheet")
+        self.view.addSubview(newSheetButton)
+        newSheetButton.snp.makeConstraints { (make) in
+            make.right.equalTo(-5)
+            make.bottom.equalTo(redoButton.snp.top).offset(-5)
+            make.width.equalTo(80)
+            make.height.equalTo(30)
+        }
+        newSheetButton.addTarget(self, action: #selector(tapNewSheet(_:)), for: .touchUpInside)
     }
     
     override var prefersStatusBarHidden: Bool {
@@ -77,8 +95,10 @@ class WhiteboardViewController: UIViewController {
     
     // MARK:
     
-    func update(_ whiteboardData: WhiteboardData) {
-        whiteboardView.update(whiteboardData.drawElements)
+    func update(_ data: WhiteboardData) {
+        DispatchQueue.main.async {
+            self.whiteboardView.update(data)
+        }
     }
     
     // MARK:
@@ -88,10 +108,32 @@ class WhiteboardViewController: UIViewController {
     }
     
     @objc func tapSegmentedControl(_ control: UISegmentedControl) {
-        whiteboardView.mode = control.selectedSegmentIndex == 0 ? .scrolling : .drawing
+        whiteboardScrollView.mode = control.selectedSegmentIndex == 0 ? .drawing : .scrolling
     }
     
     @objc func tapUndo(_ button: UIButton) {
         whiteboardView.undo()
+    }
+    
+    @objc func tapRedo(_ button: UIButton) {
+        whiteboardView.redo() 
+    }
+    
+    @objc func tapNewSheet(_ button: UIButton) {
+        whiteboardView.createNewSheet()
+    }
+}
+
+class Button: UIButton {
+    
+    init(title: String) {
+        super.init(frame: .zero)
+        setTitle(title, for: .normal)
+        titleLabel?.font = UIFont.systemFont(ofSize: 14)
+        setTitleColor(UIColor(red: 0/255, green: 122/255, blue: 255/255, alpha: 1), for: .normal)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }

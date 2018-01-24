@@ -10,6 +10,7 @@
 		08C425E6EB859087D6A2503F /* Pods_WhiteBoardSample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9528E620823443EEE60750EA /* Pods_WhiteBoardSample.framework */; };
 		411269C82010A00D006F079B /* ApiRTC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 411269C72010A00D006F079B /* ApiRTC.framework */; };
 		411269C92010A00D006F079B /* ApiRTC.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 411269C72010A00D006F079B /* ApiRTC.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		411BF09D20179F16000DAE6F /* WhiteboardScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411BF09C20179F16000DAE6F /* WhiteboardScrollView.swift */; };
 		411DB132200CE2EB009BB689 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411DB131200CE2EB009BB689 /* Utils.swift */; };
 		41BAD0821FFE3810004EC1CD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41BAD0811FFE3810004EC1CD /* AppDelegate.swift */; };
 		41BAD0841FFE3810004EC1CD /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41BAD0831FFE3810004EC1CD /* ViewController.swift */; };
@@ -37,6 +38,7 @@
 
 /* Begin PBXFileReference section */
 		411269C72010A00D006F079B /* ApiRTC.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ApiRTC.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		411BF09C20179F16000DAE6F /* WhiteboardScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhiteboardScrollView.swift; sourceTree = "<group>"; };
 		411DB131200CE2EB009BB689 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		41BAD07E1FFE3810004EC1CD /* WhiteBoardSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WhiteBoardSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		41BAD0811FFE3810004EC1CD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -101,6 +103,7 @@
 				41BAD0A91FFF962F004EC1CD /* Config.swift */,
 				41BAD0831FFE3810004EC1CD /* ViewController.swift */,
 				41E1F41D200E1495005AB4C0 /* WhiteboardViewController.swift */,
+				411BF09C20179F16000DAE6F /* WhiteboardScrollView.swift */,
 				41E1F41F200E383A005AB4C0 /* WhiteboardView.swift */,
 				411DB131200CE2EB009BB689 /* Utils.swift */,
 				41BAD0851FFE3810004EC1CD /* Main.storyboard */,
@@ -262,6 +265,7 @@
 				41BAD0841FFE3810004EC1CD /* ViewController.swift in Sources */,
 				41BAD0821FFE3810004EC1CD /* AppDelegate.swift in Sources */,
 				41BAD0AA1FFF962F004EC1CD /* Config.swift in Sources */,
+				411BF09D20179F16000DAE6F /* WhiteboardScrollView.swift in Sources */,
 				411DB132200CE2EB009BB689 /* Utils.swift in Sources */,
 				41E1F41E200E1495005AB4C0 /* WhiteboardViewController.swift in Sources */,
 				41E1F420200E383A005AB4C0 /* WhiteboardView.swift in Sources */,

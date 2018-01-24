@@ -287,7 +287,7 @@ class ViewController: FormViewController {
             joinButton.disable()
             leaveButton.disable()
             whiteboardUsersButton.disable()
-            //openWhiteboardButton.disable() // FIXME:
+            openWhiteboardButton.disable()
             
         case .invited:
           
@@ -295,7 +295,7 @@ class ViewController: FormViewController {
             joinButton.enable()
             leaveButton.disable()
             whiteboardUsersButton.disable()
-            //openWhiteboardButton.disable()
+            openWhiteboardButton.disable()
         
         case .member:
             
@@ -303,7 +303,7 @@ class ViewController: FormViewController {
             joinButton.disable()
             leaveButton.enable()
             whiteboardUsersButton.enable()
-            //openWhiteboardButton.enable()
+            openWhiteboardButton.enable()
         }
     }
     
@@ -314,10 +314,12 @@ class ViewController: FormViewController {
     }
 }
 
+// MARK: WhiteboardViewControllerDelegate
+
 extension ViewController: WhiteboardViewControllerDelegate {
     
     func whiteboardViewController(_ controller: WhiteboardViewController, didAddData data: WhiteboardData) {
-        whiteboard?.add(data)
+        whiteboard?.update(data)
     }
 }
 

@@ -10,225 +10,382 @@ import UIKit
 import ApiRTC
 
 // FIXME: fix all access levels !
+// FIXME: move to framework
 
-enum WhiteboardTouchMode {
-    case scrolling
-    case drawing
-}
-
-class WhiteboardView: UIScrollView {
-
-    var contentView: WhiteboardContentView!
-    var mode: WhiteboardTouchMode = .scrolling {
-        didSet {
-            handleTouchMode(mode)
-        }
-    }
-    
-    private var onUpdate: ((_ drawElements: [DrawElement]) -> Void)? { // FIXME: add
-        didSet {
-            contentView.onUpdate = onUpdate
-        }
-    }
-    
-    init(size: CGSize, insets: UIEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 0)) {
-        super.init(frame: .zero)
-        initialize(size: size, insets: insets)
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    private func initialize(size: CGSize, insets: UIEdgeInsets) {
-        self.backgroundColor = .lightGray
-        
-        contentView = WhiteboardContentView(frame: CGRect(x: insets.left, y: insets.top, width: size.width, height: size.height))
-        contentView.backgroundColor = .white
-        self.addSubview(contentView)
-        
-        self.contentSize = CGSize(width: size.width + insets.left + insets.right, height: size.height + insets.top + insets.bottom)
-    }
-    
-    private func handleTouchMode(_ mode: WhiteboardTouchMode) {
-        switch mode {
-        case .scrolling:
-            self.isScrollEnabled = true
-            contentView.isUserInteractionEnabled = false
-        case .drawing:
-            self.isScrollEnabled = false
-            contentView.isUserInteractionEnabled = true
-        }
-    }
-    
-    func undo() {
-        contentView.undo()
-    }
-    
-    func clear() {
-        contentView.clear()
-    }
-    
-    open func onUpdate(_ onUpdate: @escaping (_ drawElements: [DrawElement]) -> Void) {
-        self.onUpdate = onUpdate
-    }
-    
-    func update(_ drawElements: [DrawElement]) {
-        
-        for drawElement in drawElements {
-            contentView.addElement(drawElement)
-        }
+internal struct WhiteboardClient {
+    var userId: String
+    var elements: [DrawElement] // FIXME: sort
+    var lastElementId: Int {
+        return elements.last?.id ?? 0
     }
 }
 
-class WhiteboardContentView: UIImageView {
+class WhiteboardView: UIImageView {
     
-    var drawTimer: Timer?
-    var drawElements: [DrawElement] = []
+    var sheetId = 1
     
-    var currentUserImage: UIImage?
-    var commonImage: UIImage?
-    
+    var localElementIndex = 1
+    var lastUndoIndex = 0
     var lastPoint = CGPoint.zero
-    var actualOwnElementIndex = 0
+
+    var drawTimer: Timer?
     
-    var onUpdate: ((_ drawElements: [DrawElement]) -> Void)?
+    var localElementsBuffer: [DrawElement] = []
     
+    var clients: [String: WhiteboardClient] = [:]
+    
+    var localImage: UIImage?
+    var remoteImage: UIImage?
+    
+    var redoElements: [[DrawElement]] = []
+
+    var onUpdate: ((_ data: WhiteboardData) -> Void)?
+
     // MARK: Touches
-    
+
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
+
         guard let point = touches.first?.location(in: self) else {
             return
         }
-        
-        undoManager?.registerUndo(withTarget: self, selector: #selector(handleUndo(_:)), object: currentUserImage)
+
+        lastUndoIndex += 1
 
         lastPoint = point
-        
+
         // FIXME: make property for frequency
         drawTimer = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(drawTimerAction), userInfo: nil, repeats: true)
         drawTimer?.fire()
     }
-    
+
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
 
         guard let point = touches.first?.location(in: self) else {
             return
         }
-    
-        let element = DrawElement(id: actualOwnElementIndex, undoIndex: 1, fromPoint: lastPoint, toPoint: point)
-        addElement(element)
         
+        let element = DrawElement(id: localElementIndex, undoIndex: lastUndoIndex, fromPoint: lastPoint, toPoint: point)
+        
+        drawLocalElement(element)
+        
+        lock(localElementsBuffer) {
+            localElementsBuffer.append(element)
+        }
+        
+        addElementsToLocalClient([element])
+
         lastPoint = point
     }
-    
+
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
 
         drawTimer?.invalidate()
         drawTimer = nil
         drawTimerAction()
     }
-    
+
     @objc private func drawTimerAction() {
-        
-        guard drawElements.count > 0 else {
+
+        guard localElementsBuffer.count > 0 else {
             return
         }
-        
-        lock(drawElements) {
-            onUpdate?(drawElements)
-            drawElements = []
+
+        lock(localElementsBuffer) {
+            let data = WhiteboardData(sheetId: sheetId, elements: localElementsBuffer)
+            onUpdate?(data)
+            localElementsBuffer = []
         }
     }
-    
+
     // MARK: Drawing
-    
+
     private func drawLine(fromPoint: CGPoint, toPoint: CGPoint, byCurrentUser: Bool = true) {
-        
+
         draw(byCurrentUser: byCurrentUser) { context in
             context.move(to: fromPoint)
             context.addLine(to: toPoint)
-            
             context.setLineWidth(1)
             context.setStrokeColor(UIColor.blue.cgColor)
             context.strokePath()
         }
     }
-    
+
     func draw(byCurrentUser: Bool = true, draw: ((_ context: CGContext) -> Void)) {
-        
+
         UIGraphicsBeginImageContextWithOptions(self.frame.size, false, 0)
-        
+
         guard let context = UIGraphicsGetCurrentContext() else {
             print("No context")
             return
         }
-        
+
         draw(context)
-        
+
         if byCurrentUser {
-            currentUserImage?.draw(in: CGRect(x: 0, y: 0, width: self.frame.size.width, height: self.frame.size.height), blendMode: .colorBurn, alpha: 1.0)
-            currentUserImage = UIGraphicsGetImageFromCurrentImageContext()
+            localImage?.draw(in: CGRect(x: 0, y: 0, width: self.frame.size.width, height: self.frame.size.height), blendMode: .colorBurn, alpha: 1.0)
+            localImage = UIGraphicsGetImageFromCurrentImageContext()
         }
         else {
-            commonImage?.draw(in: CGRect(x: 0, y: 0, width: self.frame.size.width, height: self.frame.size.height), blendMode: .colorBurn, alpha: 1.0)
-            commonImage = UIGraphicsGetImageFromCurrentImageContext()
+            remoteImage?.draw(in: CGRect(x: 0, y: 0, width: self.frame.size.width, height: self.frame.size.height), blendMode: .colorBurn, alpha: 1.0)
+            remoteImage = UIGraphicsGetImageFromCurrentImageContext()
         }
+
+        remerge()
+
+        UIGraphicsEndImageContext()
+    }
+    
+    private func erase() {
+        // FIXME:
+    }
+    
+    private func remerge() {
         
-        var newImage = commonImage
+        var newImage = remoteImage
         
-        if let currentUserImage = currentUserImage {
+        if let currentUserImage = localImage {
             newImage = newImage?.combineImage(image: currentUserImage) ?? currentUserImage
         }
         
         self.image = newImage
-        
-        UIGraphicsEndImageContext()
     }
     
-    func addElement(_ drawElement: DrawElement) {
-        
-        switch drawElement.tool {
+    private func drawLocalElement(_ element: DrawElement) {
+
+        localElementIndex += 1
+
+        switch element.tool {
         case .pen:
-            drawLine(fromPoint: drawElement.fromPoint, toPoint: drawElement.toPoint, byCurrentUser: drawElement.userId == ApiRTC.session.user.id)
-        }
-        
-        lock(drawElements) {
-            drawElements.append(drawElement)
-        }
-        
-        if drawElement.userId == ApiRTC.session.user.id {
-            actualOwnElementIndex += 1
+            drawLine(fromPoint: element.fromPoint, toPoint: element.toPoint, byCurrentUser: true)
         }
     }
     
-    // FIXME:
-    
-    func undo() {
-        undoManager?.undo()
-    }
-    
-    func redo() {
-        undoManager?.redo()
-    }
-    
-    func clear() {
+    private func redrawLocalElements() {
         
-        guard let undoManager = undoManager else {
+        self.image = nil
+        localImage = nil
+        
+        let localElements = getLocalClient().elements
+        
+        for localElement in localElements {
+            drawLocalElement(localElement)
+        }
+        
+        remerge()
+    }
+    
+    private func drawRemoteElement(_ element: DrawElement) {
+        
+        switch element.tool {
+        case .pen:
+            drawLine(fromPoint: element.fromPoint, toPoint: element.toPoint, byCurrentUser: false)
+        }
+    }
+    
+    private func redrawRemoteElements() {
+        
+        self.image = nil
+        remoteImage = nil
+        
+        guard let remoteElements = getRemoteElements() else {
+            remerge()
             return
         }
         
-        while undoManager.canUndo {
-            undo()
+        for remoteElement in remoteElements {
+            drawRemoteElement(remoteElement)
         }
     }
     
-    @objc func handleUndo(_ image: UIImage) {
+    private func redraw() {
+        redrawRemoteElements()
+        redrawLocalElements()
+    }
+    
+    // MARK: Handlers
+    
+    func update(_ data: WhiteboardData) {
         
-        draw { _ in
-            currentUserImage = image
+        // FIXME: need local sync
+        
+        if data.sheetId != sheetId {
+            sheetId = data.sheetId
+            reset()
+            return
         }
+        
+        if !data.isDrawing {
+            return // FIXME: need handle? cursor?
+        }
+        
+        let client = getClient(forUserId: data.senderId)
+        
+        if data.isDeleting {
+            removeElementsFromClient(withUserId: data.senderId, elements: data.elements)
+            redrawRemoteElements()
+            return
+        }
+        
+        var newElements: [DrawElement] = []
+        
+        for element in data.elements {
+            guard element.userId != ApiRTC.session.user.id else {
+                continue
+            }
+            guard element.userId == client.userId else {
+                continue
+            }
+            guard element.id > client.lastElementId else {
+                continue
+            }
+
+            newElements.append(element)
+        }
+        
+        addElementsToClient(withUserId: data.senderId, elements: newElements)
+        
+        guard newElements.count > 0 else {
+            return
+        }
+        
+        for newElement in newElements {
+            drawRemoteElement(newElement)
+        }
+    }
+    
+    // MARK: Actions
+    
+    func undo() {
+
+        var removingElements: [DrawElement] = []
+        let localElements = getLocalClient().elements
+        
+        for localElement in localElements {
+            if localElement.undoIndex == lastUndoIndex {
+                removingElements.append(localElement)
+            }
+        }
+        
+        lastUndoIndex -= 1
+        
+        let data = WhiteboardData(sheetId: sheetId, elements: removingElements, isDeleting: true)
+        onUpdate?(data)
+        
+        removeElementsFromLocalClient(removingElements)
+        
+        redrawLocalElements()
+        
+        redoElements.append(removingElements)
+    }
+    
+    func redo() {
+        
+        guard let elements = redoElements.last else {
+            return
+        }
+        
+        for element in elements {
+            drawLocalElement(element)
+        }
+        
+        let data = WhiteboardData(sheetId: sheetId, elements: elements)
+        onUpdate?(data)
+        
+        addElementsToLocalClient(elements)
+        
+        redoElements.removeLast()
+        
+        lastUndoIndex += 1
+    }
+    
+    func createNewSheet() {
+        reset()
+        
+        sheetId += 1
+        let data = WhiteboardData(sheetId: sheetId, elements: [])
+        onUpdate?(data)
+    }
+    
+    // MARK:
+    
+    open func onUpdate(_ onUpdate: @escaping (_ data: WhiteboardData) -> Void) {
+        self.onUpdate = onUpdate
+    }
+    
+    // MARK: Helpers
+    
+    func reset() {
+        clients = [:]
+        redoElements = []
+        redraw()
+        
+        localElementIndex = 1
+        lastUndoIndex = 0
+        lastPoint = CGPoint.zero
+        
+        localElementsBuffer = []
+        
+        localImage = nil
+        remoteImage = nil
+    }
+    
+    func getClient(forUserId userId: String) -> WhiteboardClient {
+        return lock(clients) { () -> WhiteboardClient in
+            if let client = clients[userId] {
+                return client
+            }
+            else {
+                let client = WhiteboardClient(userId: userId, elements: [])
+                clients[userId] = client
+                return client
+            }
+        }
+    }
+    
+    func getLocalClient() -> WhiteboardClient {
+        return getClient(forUserId: ApiRTC.session.user.id)
+    }
+    
+    func addElementsToClient(withUserId userId: String, elements: [DrawElement]) {
+        _ = getClient(forUserId: userId)
+        lock(clients) {
+            clients[userId]?.elements.append(contentsOf: elements)
+        }
+    }
+    
+    func addElementsToLocalClient(_ elements: [DrawElement]) {
+        addElementsToClient(withUserId: ApiRTC.session.user.id, elements: elements)
+    }
+    
+    func removeElementsFromClient(withUserId userId: String, elements: [DrawElement]) {
+        var client = getClient(forUserId: userId)
+        for element in elements {
+            client.elements = client.elements.filter({ $0.id != element.id })
+        }
+        lock(clients) {
+            clients[userId]?.elements = client.elements
+        }
+    }
+    
+    func removeElementsFromLocalClient(_ elements: [DrawElement]) {
+        removeElementsFromClient(withUserId: ApiRTC.session.user.id, elements: elements)
+    }
+    
+    func getRemoteElements() -> [DrawElement]? {
+        
+        var remoteElements: [DrawElement] = []
+        
+        for (userId, client) in clients {
+            if userId == ApiRTC.session.user.id {
+                continue
+            }
+            
+            remoteElements.append(contentsOf: client.elements)
+        }
+        
+        remoteElements.sort(by: { return $0.time > $1.time }) // FIXME: check
+        
+        return remoteElements.count > 0 ? remoteElements : nil
     }
 }
 
@@ -241,7 +398,6 @@ func lock<T>(_ lock: Any, _ body: () throws -> T) rethrows -> T {
     }
     return try body()
 }
-
 
 extension UIImage {
     

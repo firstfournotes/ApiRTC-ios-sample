@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  MainViewController.swift
 //  WhiteBoardSample
 //
 //  Created by Aleksandr Khorobrykh on 04/01/2018.
@@ -18,7 +18,7 @@ enum WhiteboardMemeberState {
     case member
 }
 
-class ViewController: FormViewController {
+class MainViewController: FormViewController {
 
     var stateLabel, userIdLabel: UILabel!
     
@@ -197,12 +197,6 @@ class ViewController: FormViewController {
             Drop.down(str)
         }
         
-        whiteboard.onUpdate { update in
-            DispatchQueue.main.async {
-                self.whiteboardViewController?.update(update)
-            }
-        }
-        
         whiteboardMemberState = whiteboard.room.isOwned ? .member : .invited
         DispatchQueue.main.async {
             Drop.down("New whiteboard, roomId: \(whiteboard.room.id)")
@@ -308,18 +302,12 @@ class ViewController: FormViewController {
     }
     
     func openWhiteboard() {
-        whiteboardViewController = WhiteboardViewController()
-        whiteboardViewController?.delegate = self
+        guard let whiteboard = whiteboard else {
+            // FIXME: message
+            return
+        }
+        whiteboardViewController = WhiteboardViewController(whiteboard: whiteboard)
         self.present(whiteboardViewController!, animated: true, completion: nil)
-    }
-}
-
-// MARK: WhiteboardViewControllerDelegate
-
-extension ViewController: WhiteboardViewControllerDelegate {
-    
-    func whiteboardViewController(_ controller: WhiteboardViewController, didAddData data: WhiteboardData) {
-        whiteboard?.update(data)
     }
 }
 

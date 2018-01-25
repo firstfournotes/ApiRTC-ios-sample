@@ -10,34 +10,52 @@ import UIKit
 import ApiRTC
 import SnapKit
 
-protocol WhiteboardViewControllerDelegate: class {
-    func whiteboardViewController(_ controller: WhiteboardViewController, didAddData data: WhiteboardData)
+enum WhiteboardTouchMode {
+    case scrolling
+    case drawing
 }
 
 class WhiteboardViewController: UIViewController {
-
-    weak var delegate: WhiteboardViewControllerDelegate?
     
+    var whiteboard: Whiteboard!
     var whiteboardScrollView: WhiteboardScrollView!
     var whiteboardView: WhiteboardView!
+    
+    var mode: WhiteboardTouchMode! {
+        didSet {
+            handleTouchMode(mode)
+        }
+    }
+    
+    init(whiteboard: Whiteboard) {
+        super.init(nibName: nil, bundle: nil)
+        self.whiteboard = whiteboard
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.view.backgroundColor = .white
     
-        whiteboardScrollView = WhiteboardScrollView(size: CGSize(width: 1000, height: 1000), insets: UIEdgeInsetsMake(10, 10, 10, 10))
-        whiteboardView = whiteboardScrollView.whiteboardView // FIXME:
-        
+        // FIXME: fix sizes
+        whiteboardScrollView = WhiteboardScrollView(size: CGSize(width: 1000, height: 1000))
         self.view.addSubview(whiteboardScrollView)
         whiteboardScrollView.snp.makeConstraints { (make) in
             make.top.right.left.bottom.equalTo(0)
         }
-        whiteboardScrollView.mode = .drawing
         
-        whiteboardView.onUpdate { data in
-            self.delegate?.whiteboardViewController(self, didAddData: data)
-        }
+        whiteboardView = WhiteboardView(frame: CGRect(x: 5, y: 5, width: 990, height: 990))
+        whiteboardScrollView.addSubview(whiteboardView)
+        // FIXME: onchange size func and event to whiteboardView
+
+        whiteboard.setView(whiteboardView)
+        // FIXME: add automatic update turn off
+        
+        // Buttons
         
         let dismissButton = Button(title: "Close")
         self.view.addSubview(dismissButton)
@@ -87,18 +105,14 @@ class WhiteboardViewController: UIViewController {
             make.height.equalTo(30)
         }
         newSheetButton.addTarget(self, action: #selector(tapNewSheet(_:)), for: .touchUpInside)
+        
+        //
+        
+        mode = .drawing
     }
     
     override var prefersStatusBarHidden: Bool {
         return true
-    }
-    
-    // MARK:
-    
-    func update(_ data: WhiteboardData) {
-        DispatchQueue.main.async {
-            self.whiteboardView.update(data)
-        }
     }
     
     // MARK:
@@ -108,19 +122,32 @@ class WhiteboardViewController: UIViewController {
     }
     
     @objc func tapSegmentedControl(_ control: UISegmentedControl) {
-        whiteboardScrollView.mode = control.selectedSegmentIndex == 0 ? .drawing : .scrolling
+        mode = control.selectedSegmentIndex == 0 ? .drawing : .scrolling
     }
     
     @objc func tapUndo(_ button: UIButton) {
-        whiteboardView.undo()
+        whiteboard.undo()
     }
     
     @objc func tapRedo(_ button: UIButton) {
-        whiteboardView.redo() 
+        whiteboard.redo()
     }
     
     @objc func tapNewSheet(_ button: UIButton) {
-        whiteboardView.createNewSheet()
+        whiteboard.createNewSheet()
+    }
+    
+    // MARK:
+    
+    func handleTouchMode(_ mode: WhiteboardTouchMode) {
+        switch mode {
+        case .scrolling:
+            whiteboardScrollView.isScrollEnabled = true
+            whiteboardView.isUserInteractionEnabled = false
+        case .drawing:
+            whiteboardScrollView.isScrollEnabled = false
+            whiteboardView.isUserInteractionEnabled = true
+        }
     }
 }
 

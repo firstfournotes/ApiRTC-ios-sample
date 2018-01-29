@@ -27,7 +27,7 @@ class WhiteboardViewController: UIViewController {
         }
     }
     
-    let toolItems: [DrawTool] = [.pen, .eraser, .rectangle, .arrow, .ellipse]
+    let toolItems: [DrawTool] = [.pen, .eraser, .rectangle, .arrow, .ellipse, .text]
     
     init(whiteboard: Whiteboard) {
         super.init(nibName: nil, bundle: nil)
@@ -51,6 +51,7 @@ class WhiteboardViewController: UIViewController {
         }
         
         whiteboardView = WhiteboardView(frame: CGRect(x: 5, y: 5, width: 990, height: 990))
+        whiteboardView.backgroundColor = .white
         whiteboardScrollView.addSubview(whiteboardView)
 
         whiteboard.setView(whiteboardView)
@@ -69,8 +70,8 @@ class WhiteboardViewController: UIViewController {
         let undoButton = Button(title: "Undo")
         self.view.addSubview(undoButton)
         undoButton.snp.makeConstraints { (make) in
-            make.top.equalTo(dismissButton.snp.bottom).offset(3)
-            make.left.equalTo(0)
+            make.top.equalTo(0)
+            make.right.equalTo(0)
             make.width.equalTo(80)
             make.height.equalTo(30)
         }
@@ -80,7 +81,7 @@ class WhiteboardViewController: UIViewController {
         self.view.addSubview(redoButton)
         redoButton.snp.makeConstraints { (make) in
             make.top.equalTo(undoButton.snp.bottom).offset(3)
-            make.left.equalTo(0)
+            make.right.equalTo(0)
             make.width.equalTo(80)
             make.height.equalTo(30)
         }
@@ -90,7 +91,7 @@ class WhiteboardViewController: UIViewController {
         self.view.addSubview(newSheetButton)
         newSheetButton.snp.makeConstraints { (make) in
             make.top.equalTo(redoButton.snp.bottom).offset(3)
-            make.left.equalTo(0)
+            make.right.equalTo(0)
             make.width.equalTo(80)
             make.height.equalTo(30)
         }
@@ -117,6 +118,9 @@ class WhiteboardViewController: UIViewController {
         }
         touchModeSegmentedControl.selectedSegmentIndex = 0
         touchModeSegmentedControl.addTarget(self, action: #selector(tapModeSegmentedControl(_:)), for: .valueChanged)
+        
+        let tapGR = UITapGestureRecognizer(target: self, action: #selector(tapGR(_:)))
+        self.view.addGestureRecognizer(tapGR)
         
         mode = .drawing
     }
@@ -149,6 +153,31 @@ class WhiteboardViewController: UIViewController {
     
     @objc func tapNewSheet(_ button: UIButton) {
         whiteboard.createNewSheet()
+    }
+    
+    @objc func tapGR(_ gr: UITapGestureRecognizer) {
+        
+        guard whiteboard.tool == .text else {
+            return
+        }
+        
+        let point = gr.location(in: whiteboardView)
+        
+        let alert = UIAlertController(title: "Print text", message: nil, preferredStyle: .alert)
+        alert.addTextField { _ in
+            
+        }
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
+            let textField = alert.textFields![0]
+            if let text = textField.text {
+                self.whiteboard.addText(text, atPoint: point)
+            }
+        }))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action) in
+            
+        }))
+        
+        self.present(alert, animated: true, completion: nil)
     }
     
     // MARK:

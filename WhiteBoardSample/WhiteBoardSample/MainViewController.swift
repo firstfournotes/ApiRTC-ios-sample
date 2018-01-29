@@ -303,7 +303,7 @@ class MainViewController: FormViewController {
     
     func openWhiteboard() {
         guard let whiteboard = whiteboard else {
-            // FIXME: message
+            print("Whiteboard is nil")
             return
         }
         whiteboardViewController = WhiteboardViewController(whiteboard: whiteboard)

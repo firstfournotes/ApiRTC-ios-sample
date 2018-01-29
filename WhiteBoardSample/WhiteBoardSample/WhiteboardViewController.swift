@@ -27,6 +27,8 @@ class WhiteboardViewController: UIViewController {
         }
     }
     
+    let toolItems: [DrawTool] = [.pen, .eraser, .rectangle, .arrow, .ellipse]
+    
     init(whiteboard: Whiteboard) {
         super.init(nibName: nil, bundle: nil)
         self.whiteboard = whiteboard
@@ -38,7 +40,7 @@ class WhiteboardViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+ 
         self.view.backgroundColor = .white
     
         // FIXME: fix sizes
@@ -50,37 +52,25 @@ class WhiteboardViewController: UIViewController {
         
         whiteboardView = WhiteboardView(frame: CGRect(x: 5, y: 5, width: 990, height: 990))
         whiteboardScrollView.addSubview(whiteboardView)
-        // FIXME: onchange size func and event to whiteboardView
 
         whiteboard.setView(whiteboardView)
-        // FIXME: add automatic update turn off
         
         // Buttons
         
         let dismissButton = Button(title: "Close")
         self.view.addSubview(dismissButton)
         dismissButton.snp.makeConstraints { (make) in
-            make.left.top.equalTo(5)
+            make.left.top.equalTo(0)
             make.width.equalTo(80)
             make.height.equalTo(30)
         }
         dismissButton.addTarget(self, action: #selector(tapDismiss(_:)), for: .touchUpInside)
         
-        let touchModeSegmentedControl = UISegmentedControl(items: ["Draw", "Scroll"])
-        self.view.addSubview(touchModeSegmentedControl)
-        touchModeSegmentedControl.snp.makeConstraints { (make) in
-            make.left.equalTo(10)
-            make.bottom.equalTo(-10)
-            make.width.equalTo(100)
-            make.height.equalTo(26)
-        }
-        touchModeSegmentedControl.selectedSegmentIndex = 0
-        touchModeSegmentedControl.addTarget(self, action: #selector(tapSegmentedControl(_:)), for: .valueChanged)
-        
         let undoButton = Button(title: "Undo")
         self.view.addSubview(undoButton)
         undoButton.snp.makeConstraints { (make) in
-            make.right.bottom.equalTo(-5)
+            make.top.equalTo(dismissButton.snp.bottom).offset(3)
+            make.left.equalTo(0)
             make.width.equalTo(80)
             make.height.equalTo(30)
         }
@@ -89,8 +79,8 @@ class WhiteboardViewController: UIViewController {
         let redoButton = Button(title: "Redo")
         self.view.addSubview(redoButton)
         redoButton.snp.makeConstraints { (make) in
-            make.right.equalTo(-5)
-            make.bottom.equalTo(undoButton.snp.top).offset(-5)
+            make.top.equalTo(undoButton.snp.bottom).offset(3)
+            make.left.equalTo(0)
             make.width.equalTo(80)
             make.height.equalTo(30)
         }
@@ -99,14 +89,34 @@ class WhiteboardViewController: UIViewController {
         let newSheetButton = Button(title: "New Sheet")
         self.view.addSubview(newSheetButton)
         newSheetButton.snp.makeConstraints { (make) in
-            make.right.equalTo(-5)
-            make.bottom.equalTo(redoButton.snp.top).offset(-5)
+            make.top.equalTo(redoButton.snp.bottom).offset(3)
+            make.left.equalTo(0)
             make.width.equalTo(80)
             make.height.equalTo(30)
         }
         newSheetButton.addTarget(self, action: #selector(tapNewSheet(_:)), for: .touchUpInside)
         
-        //
+        let toolSegmentedControl = UISegmentedControl(items: toolItems.map({ "\($0)" }))
+        self.view.addSubview(toolSegmentedControl)
+        toolSegmentedControl.snp.makeConstraints { (make) in
+            make.left.equalTo(5)
+            make.right.equalTo(-5)
+            make.bottom.equalTo(-5)
+            make.height.equalTo(26)
+        }
+        toolSegmentedControl.selectedSegmentIndex = 0
+        toolSegmentedControl.addTarget(self, action: #selector(tapToolSegmentedControl(_:)), for: .valueChanged)
+        
+        let touchModeSegmentedControl = UISegmentedControl(items: ["Draw", "Scroll"])
+        self.view.addSubview(touchModeSegmentedControl)
+        touchModeSegmentedControl.snp.makeConstraints { (make) in
+            make.left.equalTo(5)
+            make.width.equalTo(150)
+            make.bottom.equalTo(toolSegmentedControl.snp.top).offset(-10)
+            make.height.equalTo(26)
+        }
+        touchModeSegmentedControl.selectedSegmentIndex = 0
+        touchModeSegmentedControl.addTarget(self, action: #selector(tapModeSegmentedControl(_:)), for: .valueChanged)
         
         mode = .drawing
     }
@@ -121,8 +131,12 @@ class WhiteboardViewController: UIViewController {
         self.dismiss(animated: true, completion: nil)
     }
     
-    @objc func tapSegmentedControl(_ control: UISegmentedControl) {
+    @objc func tapModeSegmentedControl(_ control: UISegmentedControl) {
         mode = control.selectedSegmentIndex == 0 ? .drawing : .scrolling
+    }
+    
+    @objc func tapToolSegmentedControl(_ control: UISegmentedControl) {
+        whiteboard.tool = toolItems[control.selectedSegmentIndex]
     }
     
     @objc func tapUndo(_ button: UIButton) {
@@ -153,14 +167,28 @@ class WhiteboardViewController: UIViewController {
 
 class Button: UIButton {
     
+    static var bgColor = UIColor(red: 0/255, green: 122/255, blue: 255/255, alpha: 0.7)
+    
     init(title: String) {
         super.init(frame: .zero)
         setTitle(title, for: .normal)
         titleLabel?.font = UIFont.systemFont(ofSize: 14)
-        setTitleColor(UIColor(red: 0/255, green: 122/255, blue: 255/255, alpha: 1), for: .normal)
+        self.backgroundColor = Button.bgColor
+        setTitleColor(.white, for: .normal)
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override var isHighlighted: Bool {
+        didSet {
+            switch isHighlighted {
+            case true:
+                self.backgroundColor = Button.bgColor.withAlphaComponent(1)
+            case false:
+                self.backgroundColor = Button.bgColor
+            }
+        }
     }
 }

@@ -29,6 +29,8 @@ class WhiteboardViewController: UIViewController {
     
     let toolItems: [DrawTool] = [.pen, .eraser, .rectangle, .arrow, .ellipse, .text]
     
+    static let whiteboardSize = CGSize(width: 1000, height: 1000)
+    
     init(whiteboard: Whiteboard) {
         super.init(nibName: nil, bundle: nil)
         self.whiteboard = whiteboard
@@ -44,20 +46,26 @@ class WhiteboardViewController: UIViewController {
         self.view.backgroundColor = .white
     
         // FIXME: fix sizes
-        whiteboardScrollView = WhiteboardScrollView(size: CGSize(width: 1000, height: 1000))
+        whiteboardScrollView = WhiteboardScrollView(size: type(of: self).whiteboardSize)
         self.view.addSubview(whiteboardScrollView)
         whiteboardScrollView.snp.makeConstraints { (make) in
             make.top.right.left.bottom.equalTo(0)
         }
         
-        whiteboardView = WhiteboardView(frame: CGRect(x: 5, y: 5, width: 990, height: 990))
-        //whiteboardView.backgroundColor = .white
+        whiteboardView = WhiteboardView(frame: CGRect(x: 5, y: 5, width: type(of: self).whiteboardSize.width - 10, height: type(of: self).whiteboardSize.height - 10))
+        whiteboardView.backgroundColor = .white
         whiteboardScrollView.addSubview(whiteboardView)
 
         whiteboard.setView(whiteboardView)
-        
         whiteboard.cursorColor = .green
         
+        whiteboard.onDrawingAtPoint { point in
+            DispatchQueue.main.async {
+                self.checkFocusAtPoint(point)
+            }
+        }
+        
+
         // Buttons
         
         let dismissButton = Button(title: "Close")
@@ -221,7 +229,7 @@ class WhiteboardViewController: UIViewController {
     }
     
     @objc func tapUndo(_ button: UIButton) {
-        whiteboard.undo()
+         whiteboard.undo()
     }
     
     @objc func tapRedo(_ button: UIButton) {
@@ -267,6 +275,40 @@ class WhiteboardViewController: UIViewController {
         case .drawing:
             whiteboardScrollView.isScrollEnabled = false
             whiteboardView.isUserInteractionEnabled = true
+        }
+    }
+    
+    func checkFocusAtPoint(_ point: CGPoint) {
+        
+        guard point.x < type(of: self).whiteboardSize.width, point.y < type(of: self).whiteboardSize.height else {
+            return
+        }
+        
+        let offset = self.whiteboardScrollView.contentOffset
+        var newOffset = offset
+        var updated = false
+        
+        let deviationX = self.view.bounds.size.width / 2.0
+        switch point.x - self.view.bounds.size.width / 2.0 {
+        case let x where !((offset.x - deviationX...offset.x + deviationX).contains(x)):
+            newOffset.x = point.x - self.view.bounds.size.width / 2.0
+            updated = true
+        default:
+            break
+        }
+        let deviationY = self.view.bounds.size.height / 2.0
+        switch point.y - self.view.bounds.size.height / 2.0 {
+        case let y where !((offset.y - deviationY...offset.y + deviationY).contains(y)):
+            newOffset.y = point.y - self.view.bounds.size.height / 2.0
+            updated = true
+        default:
+            break
+        }
+        
+        if updated {
+            UIView.animate(withDuration: 1) {
+                self.whiteboardScrollView.setContentOffset(newOffset, animated: false)
+            }
         }
     }
 }

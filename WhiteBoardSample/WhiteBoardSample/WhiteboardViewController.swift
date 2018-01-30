@@ -45,7 +45,6 @@ class WhiteboardViewController: UIViewController {
  
         self.view.backgroundColor = .white
     
-        // FIXME: fix sizes
         whiteboardScrollView = WhiteboardScrollView(size: type(of: self).whiteboardSize)
         self.view.addSubview(whiteboardScrollView)
         whiteboardScrollView.snp.makeConstraints { (make) in
@@ -65,7 +64,10 @@ class WhiteboardViewController: UIViewController {
             }
         }
         
-
+        whiteboard.color = .black
+        whiteboard.tool = .pen
+        whiteboard.brushSize = 1
+        
         // Buttons
         
         let dismissButton = Button(title: "Close")
@@ -115,8 +117,8 @@ class WhiteboardViewController: UIViewController {
             make.bottom.equalTo(-10)
             make.height.equalTo(26)
         }
-        toolSegmentedControl.selectedSegmentIndex = 0
         toolSegmentedControl.addTarget(self, action: #selector(tapToolSegmentedControl(_:)), for: .valueChanged)
+        toolSegmentedControl.selectedSegmentIndex = 0
         
         let toolLabel = Label(text: "Tool")
         self.view.addSubview(toolLabel)

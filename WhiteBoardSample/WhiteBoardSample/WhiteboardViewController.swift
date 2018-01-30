@@ -51,10 +51,12 @@ class WhiteboardViewController: UIViewController {
         }
         
         whiteboardView = WhiteboardView(frame: CGRect(x: 5, y: 5, width: 990, height: 990))
-        whiteboardView.backgroundColor = .white
+        //whiteboardView.backgroundColor = .white
         whiteboardScrollView.addSubview(whiteboardView)
 
         whiteboard.setView(whiteboardView)
+        
+        whiteboard.cursorColor = .green
         
         // Buttons
         
@@ -100,24 +102,73 @@ class WhiteboardViewController: UIViewController {
         let toolSegmentedControl = UISegmentedControl(items: toolItems.map({ "\($0)" }))
         self.view.addSubview(toolSegmentedControl)
         toolSegmentedControl.snp.makeConstraints { (make) in
-            make.left.equalTo(5)
-            make.right.equalTo(-5)
-            make.bottom.equalTo(-5)
+            make.left.equalTo(8)
+            make.right.equalTo(-8)
+            make.bottom.equalTo(-10)
             make.height.equalTo(26)
         }
         toolSegmentedControl.selectedSegmentIndex = 0
         toolSegmentedControl.addTarget(self, action: #selector(tapToolSegmentedControl(_:)), for: .valueChanged)
         
+        let toolLabel = Label(text: "Tool")
+        self.view.addSubview(toolLabel)
+        toolLabel.snp.makeConstraints { (make) in
+            make.left.equalTo(8)
+            make.width.equalTo(100)
+            make.bottom.equalTo(toolSegmentedControl.snp.top).offset(-1)
+            make.height.equalTo(15)
+        }
+        
+        let colorSegmentedControl = UISegmentedControl(items: ["Black", "Red", "Blue"])
+        self.view.addSubview(colorSegmentedControl)
+        colorSegmentedControl.snp.makeConstraints { (make) in
+            make.left.equalTo(8)
+            make.width.equalTo(150)
+            make.bottom.equalTo(toolLabel.snp.top).offset(-8)
+            make.height.equalTo(26)
+        }
+        colorSegmentedControl.addTarget(self, action: #selector(tapColorSegmentedControl(_:)), for: .valueChanged)
+        colorSegmentedControl.selectedSegmentIndex = 0
+        
+        let colorLabel = Label(text: "Color")
+        self.view.addSubview(colorLabel)
+        colorLabel.snp.makeConstraints { (make) in
+            make.left.equalTo(8)
+            make.width.equalTo(100)
+            make.bottom.equalTo(colorSegmentedControl.snp.top).offset(-1)
+            make.height.equalTo(15)
+        }
+        
+        let brushSegmentedControl = UISegmentedControl(items: ["1", "2", "3"])
+        self.view.addSubview(brushSegmentedControl)
+        brushSegmentedControl.snp.makeConstraints { (make) in
+            make.left.equalTo(8)
+            make.width.equalTo(100)
+            make.bottom.equalTo(colorLabel.snp.top).offset(-8)
+            make.height.equalTo(26)
+        }
+        brushSegmentedControl.addTarget(self, action: #selector(tapBrushSegmentedControl(_:)), for: .valueChanged)
+        brushSegmentedControl.selectedSegmentIndex = 0
+        
+        let brushSizeLabel = Label(text: "Brush size")
+        self.view.addSubview(brushSizeLabel)
+        brushSizeLabel.snp.makeConstraints { (make) in
+            make.left.equalTo(8)
+            make.width.equalTo(100)
+            make.bottom.equalTo(brushSegmentedControl.snp.top).offset(-1)
+            make.height.equalTo(15)
+        }
+        
         let touchModeSegmentedControl = UISegmentedControl(items: ["Draw", "Scroll"])
         self.view.addSubview(touchModeSegmentedControl)
         touchModeSegmentedControl.snp.makeConstraints { (make) in
-            make.left.equalTo(5)
+            make.left.equalTo(8)
             make.width.equalTo(150)
-            make.bottom.equalTo(toolSegmentedControl.snp.top).offset(-10)
+            make.bottom.equalTo(brushSizeLabel.snp.top).offset(-8)
             make.height.equalTo(26)
         }
-        touchModeSegmentedControl.selectedSegmentIndex = 0
         touchModeSegmentedControl.addTarget(self, action: #selector(tapModeSegmentedControl(_:)), for: .valueChanged)
+        touchModeSegmentedControl.selectedSegmentIndex = 0
         
         let tapGR = UITapGestureRecognizer(target: self, action: #selector(tapGR(_:)))
         self.view.addGestureRecognizer(tapGR)
@@ -143,6 +194,32 @@ class WhiteboardViewController: UIViewController {
         whiteboard.tool = toolItems[control.selectedSegmentIndex]
     }
     
+    @objc func tapColorSegmentedControl(_ control: UISegmentedControl) {
+        switch control.selectedSegmentIndex {
+        case 0:
+            whiteboard.color = .black
+        case 1:
+            whiteboard.color = .red
+        case 2:
+            whiteboard.color = .blue
+        default:
+            break
+        }
+    }
+    
+    @objc func tapBrushSegmentedControl(_ control: UISegmentedControl) {
+        switch control.selectedSegmentIndex {
+        case 0:
+            whiteboard.brushSize = 1
+        case 1:
+            whiteboard.brushSize = 3
+        case 2:
+            whiteboard.brushSize = 5
+        default:
+            break
+        }
+    }
+    
     @objc func tapUndo(_ button: UIButton) {
         whiteboard.undo()
     }
@@ -156,16 +233,16 @@ class WhiteboardViewController: UIViewController {
     }
     
     @objc func tapGR(_ gr: UITapGestureRecognizer) {
-        
+
         guard whiteboard.tool == .text else {
             return
         }
-        
+
         let point = gr.location(in: whiteboardView)
-        
+
         let alert = UIAlertController(title: "Print text", message: nil, preferredStyle: .alert)
         alert.addTextField { _ in
-            
+
         }
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
             let textField = alert.textFields![0]
@@ -174,9 +251,9 @@ class WhiteboardViewController: UIViewController {
             }
         }))
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action) in
-            
+
         }))
-        
+
         self.present(alert, animated: true, completion: nil)
     }
     
@@ -219,5 +296,19 @@ class Button: UIButton {
                 self.backgroundColor = Button.bgColor
             }
         }
+    }
+}
+
+class Label: UILabel {
+    
+    init(text: String) {
+        super.init(frame: .zero)
+        self.font = UIFont.systemFont(ofSize: 12)
+        self.textColor = .gray
+        self.text = text
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }

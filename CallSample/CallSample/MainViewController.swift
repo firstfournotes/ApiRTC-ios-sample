@@ -295,8 +295,8 @@ class MainViewController: UIViewController, UITextFieldDelegate {
         guard let image = remoteVideoView.takeSnapshot() else {
             return
         }
-        
-        UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+    
+        UIImageWriteToSavedPhotosAlbum(image2, nil, nil, nil)
     }
     
     @objc func tapSwitchCameraButton(_ button: UIButton) {

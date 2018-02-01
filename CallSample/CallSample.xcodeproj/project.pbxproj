@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		3D9CD9A2DCA131B7B5D41B43 /* Pods_CallSample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1A63D6BA359AA773DDF56F5 /* Pods_CallSample.framework */; };
 		41AF470B1FEA76B900E4AFF2 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AF470A1FEA76B900E4AFF2 /* Config.swift */; };
-		41AF470D1FEA76C600E4AFF2 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AF470C1FEA76C600E4AFF2 /* ViewController.swift */; };
+		41AF470D1FEA76C600E4AFF2 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AF470C1FEA76C600E4AFF2 /* MainViewController.swift */; };
 		41AF47131FEA76CF00E4AFF2 /* UsernameField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AF470F1FEA76CF00E4AFF2 /* UsernameField.swift */; };
 		41AF47141FEA76CF00E4AFF2 /* CallBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AF47101FEA76CF00E4AFF2 /* CallBar.swift */; };
 		41AF47151FEA76CF00E4AFF2 /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AF47111FEA76CF00E4AFF2 /* Button.swift */; };
@@ -40,7 +40,7 @@
 /* Begin PBXFileReference section */
 		2AA89C2ED50CC5EC862A0AB9 /* Pods-CallSample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CallSample.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CallSample/Pods-CallSample.debug.xcconfig"; sourceTree = "<group>"; };
 		41AF470A1FEA76B900E4AFF2 /* Config.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
-		41AF470C1FEA76C600E4AFF2 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		41AF470C1FEA76C600E4AFF2 /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		41AF470F1FEA76CF00E4AFF2 /* UsernameField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UsernameField.swift; sourceTree = "<group>"; };
 		41AF47101FEA76CF00E4AFF2 /* CallBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CallBar.swift; sourceTree = "<group>"; };
 		41AF47111FEA76CF00E4AFF2 /* Button.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
@@ -105,7 +105,7 @@
 			children = (
 				41B0E6CC1FEA781B00E66268 /* AppDelegate.swift */,
 				41AF470A1FEA76B900E4AFF2 /* Config.swift */,
-				41AF470C1FEA76C600E4AFF2 /* ViewController.swift */,
+				41AF470C1FEA76C600E4AFF2 /* MainViewController.swift */,
 				41AF47171FEA76DB00E4AFF2 /* Utils.swift */,
 				41AF470E1FEA76CF00E4AFF2 /* Views */,
 				41B9F3A31FEA70DC00A6155C /* Main.storyboard */,
@@ -282,7 +282,7 @@
 				41AF470B1FEA76B900E4AFF2 /* Config.swift in Sources */,
 				41AF47141FEA76CF00E4AFF2 /* CallBar.swift in Sources */,
 				41AF47181FEA76DB00E4AFF2 /* Utils.swift in Sources */,
-				41AF470D1FEA76C600E4AFF2 /* ViewController.swift in Sources */,
+				41AF470D1FEA76C600E4AFF2 /* MainViewController.swift in Sources */,
 				41AF47161FEA76CF00E4AFF2 /* CallSettingsBar.swift in Sources */,
 				41AF47131FEA76CF00E4AFF2 /* UsernameField.swift in Sources */,
 			);

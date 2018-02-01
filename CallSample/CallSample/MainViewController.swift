@@ -26,7 +26,7 @@ enum State {
     case error
 }
 
-class ViewController: UIViewController, UITextFieldDelegate {
+class MainViewController: UIViewController, UITextFieldDelegate {
     
     var callBar: CallBar!
     var callSettingsBar: CallSettingsBar!
@@ -69,13 +69,27 @@ class ViewController: UIViewController, UITextFieldDelegate {
         
         // Video views
         remoteVideoView = EAGLVideoView(frame: self.view.bounds)
-        remoteVideoView.contentMode = .scaleAspectFit
+        remoteVideoView.contentMode = .scaleAspectFill
         remoteVideoView.backgroundColor = UIColor.white.withAlphaComponent(0.2)
         self.view.addSubview(remoteVideoView)
+        remoteVideoView.snp.makeConstraints { (make) in
+            make.top.left.right.bottom.equalTo(0)
+        }
+        remoteVideoView.onVideoSizeChange { (size) in
+            print("New video size")
+            print(size)
+            print(self.remoteVideoView.videoSize)
+        }
 
-        cameraView = CameraView(frame: CGRect(x: Config.UI.screenSize.width * 0.7 - 20, y: 20, width: 0.3 * Config.UI.screenSize.width, height: 0.3 * Config.UI.screenSize.height))
+        cameraView = CameraView(frame: CGRect(x: 0, y: 0, width: 0.3 * Config.UI.screenSize.width, height: 0.3 * Config.UI.screenSize.height))
         cameraView.backgroundColor = UIColor.white.withAlphaComponent(0.3)
         self.view.addSubview(cameraView)
+        cameraView.snp.makeConstraints { (make) in
+            make.top.equalTo(20)
+            make.left.equalTo(10)
+            make.width.equalTo(0.3 * Config.UI.screenSize.width)
+            make.height.equalTo(0.3 * Config.UI.screenSize.height)
+        }
         
         callBar = CallBar()
         self.view.addSubview(callBar)
@@ -194,6 +208,17 @@ class ViewController: UIViewController, UITextFieldDelegate {
         }
 
         ApiRTC.session.connect()
+    }
+    
+    // MARK: Device orientation handling
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+//        if UIDevice.current.orientation.isLandscape {
+//            print("Landscape")
+//        }
+//        else {
+//            print("Portrait")
+//        }
     }
     
     // MARK: CallBar actions

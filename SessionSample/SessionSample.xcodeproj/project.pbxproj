@@ -13,8 +13,6 @@
 		41B9F3E71FEA756600A6155C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 41B9F3E51FEA756600A6155C /* Main.storyboard */; };
 		41B9F3E91FEA756600A6155C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 41B9F3E81FEA756600A6155C /* Assets.xcassets */; };
 		41B9F3EC1FEA756600A6155C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 41B9F3EA1FEA756600A6155C /* LaunchScreen.storyboard */; };
-		41BAD0731FF3AD13004EC1CD /* ApiRTC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41BAD0721FF3AD13004EC1CD /* ApiRTC.framework */; };
-		41BAD0741FF3AD13004EC1CD /* ApiRTC.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 41BAD0721FF3AD13004EC1CD /* ApiRTC.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A2DAC5617FE2995F97048E4F /* Pods_SessionSample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42305931B3F4C24CC5339F4C /* Pods_SessionSample.framework */; };
 /* End PBXBuildFile section */
 
@@ -25,7 +23,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				41BAD0741FF3AD13004EC1CD /* ApiRTC.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -41,7 +38,6 @@
 		41B9F3E81FEA756600A6155C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		41B9F3EB1FEA756600A6155C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		41B9F3ED1FEA756600A6155C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		41BAD0721FF3AD13004EC1CD /* ApiRTC.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ApiRTC.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		42305931B3F4C24CC5339F4C /* Pods_SessionSample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SessionSample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D1174A76E242A681999FAF72 /* Pods-SessionSample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SessionSample.debug.xcconfig"; path = "../../ApiRTCDev/Pods/Target Support Files/Pods-SessionSample/Pods-SessionSample.debug.xcconfig"; sourceTree = "<group>"; };
 		FE8190E4C8E560A55378FF8F /* Pods-SessionSample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SessionSample.release.xcconfig"; path = "../../ApiRTCDev/Pods/Target Support Files/Pods-SessionSample/Pods-SessionSample.release.xcconfig"; sourceTree = "<group>"; };
@@ -53,7 +49,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				A2DAC5617FE2995F97048E4F /* Pods_SessionSample.framework in Frameworks */,
-				41BAD0731FF3AD13004EC1CD /* ApiRTC.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -63,7 +58,6 @@
 		41B9F3D51FEA756600A6155C = {
 			isa = PBXGroup;
 			children = (
-				41BAD0721FF3AD13004EC1CD /* ApiRTC.framework */,
 				41B9F3E01FEA756600A6155C /* SessionSample */,
 				41B9F3DF1FEA756600A6155C /* Products */,
 				4D9E325F6BF3DFDDCCFA4366 /* Pods */,

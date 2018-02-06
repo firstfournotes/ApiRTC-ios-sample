@@ -16,8 +16,6 @@
 		41AF47161FEA76CF00E4AFF2 /* CallSettingsBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AF47121FEA76CF00E4AFF2 /* CallSettingsBar.swift */; };
 		41AF47181FEA76DB00E4AFF2 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AF47171FEA76DB00E4AFF2 /* Utils.swift */; };
 		41B0E6CD1FEA781B00E66268 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41B0E6CC1FEA781B00E66268 /* AppDelegate.swift */; };
-		41B0E6D91FEA837500E66268 /* ApiRTC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41B0E6D81FEA837500E66268 /* ApiRTC.framework */; };
-		41B0E6DA1FEA837500E66268 /* ApiRTC.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 41B0E6D81FEA837500E66268 /* ApiRTC.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		41B9F3A51FEA70DC00A6155C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 41B9F3A31FEA70DC00A6155C /* Main.storyboard */; };
 		41B9F3A71FEA70DC00A6155C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 41B9F3A61FEA70DC00A6155C /* Assets.xcassets */; };
 		41B9F3AA1FEA70DC00A6155C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 41B9F3A81FEA70DC00A6155C /* LaunchScreen.storyboard */; };
@@ -30,7 +28,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				41B0E6DA1FEA837500E66268 /* ApiRTC.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -47,7 +44,6 @@
 		41AF47121FEA76CF00E4AFF2 /* CallSettingsBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CallSettingsBar.swift; sourceTree = "<group>"; };
 		41AF47171FEA76DB00E4AFF2 /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		41B0E6CC1FEA781B00E66268 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		41B0E6D81FEA837500E66268 /* ApiRTC.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ApiRTC.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		41B9F39C1FEA70DC00A6155C /* CallSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CallSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		41B9F3A41FEA70DC00A6155C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		41B9F3A61FEA70DC00A6155C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -63,7 +59,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				3D9CD9A2DCA131B7B5D41B43 /* Pods_CallSample.framework in Frameworks */,
-				41B0E6D91FEA837500E66268 /* ApiRTC.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -84,7 +79,6 @@
 		41B9F3931FEA70DC00A6155C = {
 			isa = PBXGroup;
 			children = (
-				41B0E6D81FEA837500E66268 /* ApiRTC.framework */,
 				41B9F39E1FEA70DC00A6155C /* CallSample */,
 				41B9F39D1FEA70DC00A6155C /* Products */,
 				824AA4BAC2C86046D8643261 /* Pods */,

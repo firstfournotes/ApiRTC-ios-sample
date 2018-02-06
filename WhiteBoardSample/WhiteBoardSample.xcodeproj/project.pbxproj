@@ -8,8 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		08C425E6EB859087D6A2503F /* Pods_WhiteBoardSample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9528E620823443EEE60750EA /* Pods_WhiteBoardSample.framework */; };
-		411269C82010A00D006F079B /* ApiRTC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 411269C72010A00D006F079B /* ApiRTC.framework */; };
-		411269C92010A00D006F079B /* ApiRTC.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 411269C72010A00D006F079B /* ApiRTC.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		411BF09D20179F16000DAE6F /* WhiteboardScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411BF09C20179F16000DAE6F /* WhiteboardScrollView.swift */; };
 		411DB132200CE2EB009BB689 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411DB131200CE2EB009BB689 /* Utils.swift */; };
 		412A2DC42018E27C00B5C1BD /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 412A2DC32018E27B00B5C1BD /* MainViewController.swift */; };
@@ -28,7 +26,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				411269C92010A00D006F079B /* ApiRTC.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -36,7 +33,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		411269C72010A00D006F079B /* ApiRTC.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ApiRTC.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		411BF09C20179F16000DAE6F /* WhiteboardScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhiteboardScrollView.swift; sourceTree = "<group>"; };
 		411DB131200CE2EB009BB689 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		412A2DC32018E27B00B5C1BD /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
@@ -59,7 +55,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				08C425E6EB859087D6A2503F /* Pods_WhiteBoardSample.framework in Frameworks */,
-				411269C82010A00D006F079B /* ApiRTC.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,7 +73,6 @@
 		41BAD0751FFE3810004EC1CD = {
 			isa = PBXGroup;
 			children = (
-				411269C72010A00D006F079B /* ApiRTC.framework */,
 				41BAD0801FFE3810004EC1CD /* WhiteBoardSample */,
 				41BAD07F1FFE3810004EC1CD /* Products */,
 				28353CA1EF4D7B2C29333FEB /* Pods */,
